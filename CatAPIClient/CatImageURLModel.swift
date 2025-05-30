@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ImageURLModel: Codable {
+public struct CatImageURLModel: Codable {
     public let id: String
     public let url: String
     public let width: Int
