@@ -1,0 +1,50 @@
+# macOS
+.DS_Store
+
+# Xcode
+build/
+*.xcodeproj
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/
+xcuserdata/
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+Packages/
+Package.resolved
+*.swiftpm
+
+# Mint
+Mintfile.lock
+mint_packages/
+
+# Cursor
+.cursor/
+
+# Temporary training data
+TempOvRTrainingData/
+
+# CocoaPods
+Pods/
+
+# Carthage
+Carthage/Build
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Code Injection
+injected_container.swift
+
+# Temporary training data directories
+TempOvOTrainingData/
+TempOvRTrainingData/

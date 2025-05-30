@@ -1,0 +1,123 @@
+# mint run xcodegen generate
+
+name: ImageClassifierTrainer
+options:
+  bundleIdPrefix: com.akitora
+  deploymentTarget:
+    macOS: "15.2"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: true
+
+targets:
+  ImageClassifierTrainer:
+    type: tool
+    platform: macOS
+    sources:
+      - path: main.swift
+    dependencies:
+      - target: OvRClassification
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.image-classifier-trainer
+        MACOSX_DEPLOYMENT_TARGET: "15.2"
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+
+  ImageClassifierTrainerTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: ImageClassifierTrainerTests
+    dependencies:
+      - target: OvRClassification
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.ImageClassifierTrainerTests
+        MACOSX_DEPLOYMENT_TARGET: "15.2"
+        GENERATE_INFOPLIST_FILE: true
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+
+  OvRClassification:
+    type: framework
+    platform: macOS
+    sources:
+      - path: OvRClassification
+        excludes:
+          - "**/*.md"
+    dependencies:
+      - target: CatAPIClient
+      - target: ICTFileManager
+      - target: ICTModel
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.ovr-classification
+        PRODUCT_NAME: OvRClassification
+        MACOSX_DEPLOYMENT_TARGET: "15.2"
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+
+  CatAPIClient:
+    type: framework
+    platform: macOS
+    sources:
+      - path: CatAPIClient
+        excludes:
+          - "**/*.md"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.cat-api-client
+        PRODUCT_NAME: CatAPIClient
+        MACOSX_DEPLOYMENT_TARGET: "15.2"
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+    dependencies: []
+
+  ICTFileManager:
+    type: framework
+    platform: macOS
+    sources:
+      - path: ICTFileManager
+        excludes:
+          - "**/*.md"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.ict-file-manager
+        PRODUCT_NAME: ICTFileManager
+        MACOSX_DEPLOYMENT_TARGET: "15.2"
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+    dependencies:
+      - target: ICTImageLoader
+
+  ICTModel:
+    type: framework
+    platform: macOS
+    sources:
+      - path: ICTModel
+        excludes:
+          - "**/*.md"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.ict-model
+        PRODUCT_NAME: ICTModel
+        MACOSX_DEPLOYMENT_TARGET: "15.2"
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+    dependencies: []
+
+  ICTImageLoader:
+    type: framework
+    platform: macOS
+    sources:
+      - path: ICTImageLoader
+        excludes:
+          - "**/*.md"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.ict-image-loader
+        PRODUCT_NAME: ICTImageLoader
+        MACOSX_DEPLOYMENT_TARGET: "15.2"
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+    dependencies: []
