@@ -49,8 +49,8 @@ targets:
         excludes:
           - "**/*.md"
     dependencies:
-      - target: CatAPIClient
       - target: CTFileManager
+      - target: CTImageLoader
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.akitora.ovr-classification

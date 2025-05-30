@@ -1,6 +1,7 @@
 import CoreGraphics
 import CoreML
 import CTFileManager
+import CTImageLoader
 import Foundation
 import Vision
 
@@ -12,7 +13,8 @@ private struct ModelContainer: @unchecked Sendable {
 
 public actor OvRClassifier {
     private var models: [ModelContainer] = []
-    private let fileManager: CTFileManager
+    private let fileManager: CTFileManagerProtocol
+    private let imageLoader: CTImageLoaderProtocol
 
     private var modelDirectoryURL: URL {
         let currentFileURL = URL(fileURLWithPath: #filePath)
@@ -21,8 +23,12 @@ public actor OvRClassifier {
             .appendingPathComponent("OvRModels")
     }
 
-    public init() async throws {
-        fileManager = CTFileManager()
+    public init(
+        fileManager: CTFileManagerProtocol,
+        imageLoader: CTImageLoaderProtocol
+    ) async throws {
+        self.fileManager = fileManager
+        self.imageLoader = imageLoader
 
         // モデルのロード
         let loadedModels = try await loadMLModels()
@@ -34,12 +40,12 @@ public actor OvRClassifier {
     }
 
     /// URLから画像をダウンロードし、分類を行い、閾値を超えた場合は保存する
-    public func classifyImageFromURLWithThreshold(
+    public func classifyImageFromURL(
         from url: URL,
         threshold: Float
     ) async throws -> DetectedFeature? {
         // 画像データのダウンロード
-        let (data, _) = try await URLSession.shared.data(from: url)
+        let data = try await imageLoader.downloadImage(from: url)
 
         // 全てのモデルで画像を分類し、閾値を超えた特徴が1つだけの場合のみ結果を返す
         if let feature = try await classifySingleImage(data, probabilityThreshold: threshold) {
@@ -121,10 +127,7 @@ public actor OvRClassifier {
         var collectedContainers: [ModelContainer] = []
 
         // モデルディレクトリ内の.mlmodelcファイルを取得
-        let modelURLs = try FileManager.default.contentsOfDirectory(
-            at: modelDirectoryURL,
-            includingPropertiesForKeys: nil
-        ).filter { $0.pathExtension == "mlmodelc" }
+        let modelURLs = try await fileManager.getModelFiles(in: modelDirectoryURL)
 
         guard !modelURLs.isEmpty else {
             throw ClassificationError.modelNotFound

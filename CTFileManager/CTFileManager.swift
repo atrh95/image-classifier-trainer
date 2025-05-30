@@ -9,7 +9,7 @@ public actor CTFileManager: CTFileManagerProtocol {
             self.datasetDirectory = datasetDirectory
             return
         }
-        
+
         let currentFileURL = URL(fileURLWithPath: #filePath)
         self.datasetDirectory = currentFileURL
             .deletingLastPathComponent() // CTFileManager
@@ -43,5 +43,17 @@ public actor CTFileManager: CTFileManagerProtocol {
         let labelDirectory = baseDirectory.appendingPathComponent(label)
         let fileURL = labelDirectory.appendingPathComponent(fileName)
         return fileManager.fileExists(atPath: fileURL.path)
+    }
+
+    /// 指定されたディレクトリ内の.mlmodelcファイルを取得
+    public func getModelFiles(in directory: URL) async throws -> [URL] {
+        do {
+            return try fileManager.contentsOfDirectory(
+                at: directory,
+                includingPropertiesForKeys: nil
+            ).filter { $0.pathExtension == "mlmodelc" }
+        } catch {
+            throw CTFileManagerError.fileOperationFailed(error)
+        }
     }
 }

@@ -3,7 +3,7 @@ import XCTest
 
 final class CTFileManagerTests: XCTestCase {
     var fileManager: CTFileManager!
-    
+
     private var tempDirectory: URL {
         let testDirectory = Bundle(for: type(of: self)).bundleURL
             .deletingLastPathComponent()
