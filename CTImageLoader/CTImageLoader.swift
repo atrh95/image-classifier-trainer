@@ -1,7 +1,7 @@
 import CTFileManager
 import Foundation
 
-public actor CTImageLoader {
+public actor CTImageLoader: CTImageLoaderProtocol {
     private let enableLogging: Bool
     private let fileManager: CTFileManager
 

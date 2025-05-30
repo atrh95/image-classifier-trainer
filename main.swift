@@ -17,7 +17,7 @@ Task {
 
         print("🚀 画像URLの取得を開始...")
         // 画像のダウンロードと分類
-        let urlModels = try await client.fetchImageURLs(totalCount: fetchImageCount, batchSize: 10)
+        let urlModels = try await client.fetchImageURLs(requestedCount: fetchImageCount, batchSize: 10)
         print("   \(urlModels.count)件のURLを取得しました")
 
         print("🔍 画像の分類を開始...")

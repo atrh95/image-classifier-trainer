@@ -1,16 +1,16 @@
 import CTModel
 import Foundation
 
-public struct CatAPIClient {
+public struct CatAPIClient: CatAPIClientProtocol {
     public init() {}
 
-    public func fetchImageURLs(totalCount: Int, batchSize: Int) async throws -> [CatImageURLModel] {
+    public func fetchImageURLs(requestedCount: Int, batchSize: Int) async throws -> [CatImageURLModel] {
         var result: [CatImageURLModel] = []
         var pagesRetrieved = 0
         let allowedExtensions = ["jpg", "png", "jpeg"]
         var totalFetched = 0
 
-        while result.count < totalCount {
+        while result.count < requestedCount {
             guard let url =
                 URL(string: "https://api.thecatapi.com/v1/images/search?limit=\(batchSize)&page=\(pagesRetrieved)&order=Rand")
             else {
@@ -45,10 +45,10 @@ public struct CatAPIClient {
         }
 
         print("📊 URL取得状況:")
-        print("   要求数: \(totalCount)件 → 取得数: \(totalFetched)件")
+        print("   要求数: \(requestedCount)件 → 取得数: \(totalFetched)件")
         print("   許可された拡張子: \(allowedExtensions.joined(separator: ", "))")
         print("   フィルター後: \(result.count)件")
 
-        return Array(result.prefix(totalCount))
+        return Array(result.prefix(requestedCount))
     }
 }
