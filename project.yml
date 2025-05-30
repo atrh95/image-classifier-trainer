@@ -21,7 +21,7 @@ targets:
       - target: CatAPIClient
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.image-classifier-trainer
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.ImageClassifierTrainer
         MACOSX_DEPLOYMENT_TARGET: "15.2"
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGNING_REQUIRED: NO
@@ -56,7 +56,7 @@ targets:
       - target: CTImageLoader
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.ovr-classification
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.OvRClassification
         PRODUCT_NAME: OvRClassification
         MACOSX_DEPLOYMENT_TARGET: "15.2"
         CODE_SIGNING_ALLOWED: NO
@@ -71,7 +71,7 @@ targets:
           - "**/*.md"
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.cat-api-client
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.CatAPIClient
         PRODUCT_NAME: CatAPIClient
         MACOSX_DEPLOYMENT_TARGET: "15.2"
         CODE_SIGNING_ALLOWED: NO
@@ -87,7 +87,7 @@ targets:
           - "**/*.md"
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.ct-file-manager
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.CTFileManager
         PRODUCT_NAME: CTFileManager
         MACOSX_DEPLOYMENT_TARGET: "15.2"
         CODE_SIGNING_ALLOWED: NO
@@ -103,7 +103,7 @@ targets:
           - "**/*.md"
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.ct-image-loader
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.CTImageLoader
         PRODUCT_NAME: CTImageLoader
         MACOSX_DEPLOYMENT_TARGET: "15.2"
         CODE_SIGNING_ALLOWED: NO
