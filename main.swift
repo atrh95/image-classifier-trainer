@@ -9,7 +9,7 @@ public func runMainProcess(
     classifier: OvRClassifier,
     fileManager: CTFileManagerProtocol,
     imageLoader: CTImageLoaderProtocol,
-    fetchImageCount: Int = 10,
+    fetchImageCount: Int = 100,
     classificationThreshold: Float = 0.85
 ) async throws {
     var labelCounts: [String: Int] = [:]
