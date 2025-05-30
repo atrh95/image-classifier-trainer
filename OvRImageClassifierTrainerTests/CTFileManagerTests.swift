@@ -2,19 +2,24 @@ import CTFileManager
 import XCTest
 
 final class CTFileManagerTests: XCTestCase {
-    var sut: CTFileManager!
-    var tempDirectory: URL!
+    var fileManager: CTFileManager!
+    
+    private var tempDirectory: URL {
+        let testDirectory = Bundle(for: type(of: self)).bundleURL
+            .deletingLastPathComponent()
+            .appendingPathComponent("CTFileManagerTests_Temp")
+        return testDirectory
+    }
 
     override func setUp() async throws {
         try await super.setUp()
-        tempDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: tempDirectory, withIntermediateDirectories: true)
-        sut = CTFileManager(datasetDirectory: tempDirectory)
+        fileManager = CTFileManager(datasetDirectory: tempDirectory)
     }
 
     override func tearDown() async throws {
         try? FileManager.default.removeItem(at: tempDirectory)
-        sut = nil
+        fileManager = nil
         try await super.tearDown()
     }
 
@@ -24,10 +29,10 @@ final class CTFileManagerTests: XCTestCase {
         let fileName = "test.jpg"
         let label = "testLabel"
 
-        try await sut.saveImage(imageData, fileName: fileName, label: label)
+        try await fileManager.saveImage(imageData, fileName: fileName, label: label)
 
-        let existsUnverified = await sut.fileExists(fileName: fileName, label: label, isVerified: false)
-        let existsVerified = await sut.fileExists(fileName: fileName, label: label, isVerified: true)
+        let existsUnverified = await fileManager.fileExists(fileName: fileName, label: label, isVerified: false)
+        let existsVerified = await fileManager.fileExists(fileName: fileName, label: label, isVerified: true)
         XCTAssertTrue(existsUnverified)
         XCTAssertFalse(existsVerified)
 
@@ -45,15 +50,15 @@ final class CTFileManagerTests: XCTestCase {
         let fileName = "test2.jpg"
         let label = "testLabel2"
 
-        let existsBeforeUnverified = await sut.fileExists(fileName: fileName, label: label, isVerified: false)
-        let existsBeforeVerified = await sut.fileExists(fileName: fileName, label: label, isVerified: true)
+        let existsBeforeUnverified = await fileManager.fileExists(fileName: fileName, label: label, isVerified: false)
+        let existsBeforeVerified = await fileManager.fileExists(fileName: fileName, label: label, isVerified: true)
         XCTAssertFalse(existsBeforeUnverified)
         XCTAssertFalse(existsBeforeVerified)
 
-        try await sut.saveImage(imageData, fileName: fileName, label: label)
+        try await fileManager.saveImage(imageData, fileName: fileName, label: label)
 
-        let existsAfterUnverified = await sut.fileExists(fileName: fileName, label: label, isVerified: false)
-        let existsAfterVerified = await sut.fileExists(fileName: fileName, label: label, isVerified: true)
+        let existsAfterUnverified = await fileManager.fileExists(fileName: fileName, label: label, isVerified: false)
+        let existsAfterVerified = await fileManager.fileExists(fileName: fileName, label: label, isVerified: true)
         XCTAssertTrue(existsAfterUnverified)
         XCTAssertFalse(existsAfterVerified)
     }
@@ -68,7 +73,7 @@ final class CTFileManagerTests: XCTestCase {
         try FileManager.default.setAttributes([.posixPermissions: 0o444], ofItemAtPath: tempDirectory.path)
 
         do {
-            try await sut.saveImage(imageData, fileName: fileName, label: label)
+            try await fileManager.saveImage(imageData, fileName: fileName, label: label)
             XCTFail()
         } catch {
             XCTAssertTrue(error is CTFileManagerError)

@@ -20,31 +20,11 @@ Packages/
 Package.resolved
 *.swiftpm
 
-# Mint
-Mintfile.lock
-mint_packages/
-
 # Cursor
 .cursor/
-
-# Temporary training data
-TempOvRTrainingData/
-
-# CocoaPods
-Pods/
 
 # Carthage
 Carthage/Build
 
-# fastlane
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots
-fastlane/test_output
-
-# Code Injection
-injected_container.swift
-
-# Temporary training data directories
-TempOvOTrainingData/
-TempOvRTrainingData/
+# Test temporary directories
+CTFileManagerTests_Temp/

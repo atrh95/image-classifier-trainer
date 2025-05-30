@@ -1,5 +1,6 @@
 import CatAPIClient
 import CTFileManager
+import CTImageLoader
 import Foundation
 import OvRClassification
 
