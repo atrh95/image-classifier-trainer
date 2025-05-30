@@ -1,14 +1,10 @@
-import CTFileManager
 import Foundation
 
 public final class CTImageLoaderMock: CTImageLoaderProtocol {
-    private let fileManager: CTFileManagerProtocol
     private let sampleImagesDirectory: URL
     private let sampleImageName = "MTU1MDA0NA.jpg"
 
-    public init(fileManager: CTFileManagerProtocol) {
-        self.fileManager = fileManager
-
+    public init() {
         // サンプル画像ディレクトリのパスを設定
         let currentFileURL = URL(fileURLWithPath: #filePath)
         sampleImagesDirectory = currentFileURL
@@ -20,7 +16,7 @@ public final class CTImageLoaderMock: CTImageLoaderProtocol {
         try? FileManager.default.createDirectory(at: sampleImagesDirectory, withIntermediateDirectories: true)
     }
 
-    public func downloadAndSaveImage(from url: URL, label: String) async throws {
+    public func downloadImage(from url: URL) async throws -> Data {
         // サンプル画像ディレクトリから画像を読み込む
         let fileURL = sampleImagesDirectory.appendingPathComponent(sampleImageName)
 
@@ -28,7 +24,6 @@ public final class CTImageLoaderMock: CTImageLoaderProtocol {
             throw ImageLoaderError.sampleImageNotFound
         }
 
-        // 画像データを保存
-        try await fileManager.saveImage(imageData, fileName: url.lastPathComponent, label: label)
+        return imageData
     }
 }

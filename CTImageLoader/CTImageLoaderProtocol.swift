@@ -1,5 +1,5 @@
 import Foundation
 
 public protocol CTImageLoaderProtocol {
-    func downloadAndSaveImage(from url: URL, label: String) async throws
+    func downloadImage(from url: URL) async throws -> Data
 }

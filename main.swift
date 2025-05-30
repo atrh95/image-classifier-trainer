@@ -13,6 +13,7 @@ Task {
         let client = CatAPIClient()
         let classifier = try await OvRClassifier()
         let fileManager = CTFileManager()
+        let imageLoader = CTImageLoader()
         var labelCounts: [String: Int] = [:]
 
         print("🚀 画像URLの取得を開始...")
@@ -24,10 +25,12 @@ Task {
         for (index, model) in urlModels.enumerated() {
             print("   \(model.url)を処理中...(\(index + 1)/\(urlModels.count)件目)")
             guard let url = URL(string: model.url) else { continue }
-            if let feature = try await classifier.classifyImageFromURLWithThreshold(
-                from: url,
-                threshold: classificationThreshold
-            ) {
+            
+            // 画像をダウンロード
+            let imageData = try await imageLoader.downloadImage(from: url)
+            
+            // 分類を実行
+            if let feature = try await classifier.classifySingleImage(imageData, probabilityThreshold: classificationThreshold) {
                 // 確認済みと未確認の両方のデータセットで重複チェック
                 let existsInVerified = await fileManager.fileExists(
                     fileName: url.lastPathComponent,
