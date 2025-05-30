@@ -7,13 +7,14 @@ public actor CTFileManager: CTFileManagerProtocol {
     public init(datasetDirectory: URL? = nil) {
         if let datasetDirectory {
             self.datasetDirectory = datasetDirectory
-        } else {
-            let currentFileURL = URL(fileURLWithPath: #filePath)
-            self.datasetDirectory = currentFileURL
-                .deletingLastPathComponent() // CTFileManager
-                .deletingLastPathComponent() // root
-                .appendingPathComponent("Dataset")
+            return
         }
+        
+        let currentFileURL = URL(fileURLWithPath: #filePath)
+        self.datasetDirectory = currentFileURL
+            .deletingLastPathComponent() // CTFileManager
+            .deletingLastPathComponent() // root
+            .appendingPathComponent("Dataset")
     }
 
     private var unverifiedDirectory: URL {
