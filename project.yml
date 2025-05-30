@@ -30,7 +30,7 @@ targets:
     type: bundle.unit-test
     platform: macOS
     sources:
-      - path: ImageClassifierTrainerTests
+      - path: OvRImageClassifierTrainerTests
     dependencies:
       - target: OvRClassification
     settings:

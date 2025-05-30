@@ -1,8 +1,7 @@
 import Foundation
 
 public enum CTFileManagerError: Error {
-    case directoryEnumerationFailed
-    case fileNotFound
-    case saveFailed
-    case invalidData
+    case invalidFileName
+    case emptyLabel
+    case fileOperationFailed(Error)
 }

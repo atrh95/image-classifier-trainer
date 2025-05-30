@@ -29,16 +29,23 @@ Task {
                 threshold: classificationThreshold
             ) {
                 // 確認済みと未確認の両方のデータセットで重複チェック
-                let existsInVerified = await fileManager.fileExists(fileName: url.lastPathComponent, label: feature.label, isVerified: true)
-                let existsInUnverified = await fileManager.fileExists(fileName: url.lastPathComponent, label: feature.label, isVerified: false)
-                
-                if !existsInVerified && !existsInUnverified {
+                let existsInVerified = await fileManager.fileExists(
+                    fileName: url.lastPathComponent,
+                    label: feature.label,
+                    isVerified: true
+                )
+                let existsInUnverified = await fileManager.fileExists(
+                    fileName: url.lastPathComponent,
+                    label: feature.label,
+                    isVerified: false
+                )
+
+                if !existsInVerified, !existsInUnverified {
                     // 未確認データセットに保存
                     try await fileManager.saveImage(
                         feature.imageData,
                         fileName: url.lastPathComponent,
-                        label: feature.label,
-                        isVerified: false
+                        label: feature.label
                     )
                     // 最終的な集計のためにカウント
                     labelCounts[feature.label, default: 0] += 1
@@ -51,7 +58,7 @@ Task {
         for (label, count) in labelCounts {
             print("\(label): \(count)枚")
         }
-        
+
         print("自動分類を行った画像は Dataset/Unverified ディレクトリに保存されました。")
         print("画像を確認し、分類が正しい場合は Dataset/Verified ディレクトリに移動してください。")
         print("次回の分類時に重複確認が両方のディレクトリに対して行われます")

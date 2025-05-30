@@ -1,4 +1,3 @@
-import CTModel
 import Foundation
 
 public struct CatAPIClient: CatAPIClientProtocol {
@@ -12,7 +11,9 @@ public struct CatAPIClient: CatAPIClientProtocol {
 
         while result.count < requestedCount {
             guard let url =
-                URL(string: "https://api.thecatapi.com/v1/images/search?limit=\(batchSize)&page=\(pagesRetrieved)&order=Rand")
+                URL(
+                    string: "https://api.thecatapi.com/v1/images/search?limit=\(batchSize)&page=\(pagesRetrieved)&order=Rand"
+                )
             else {
                 throw URLError(.badURL)
             }
@@ -27,19 +28,19 @@ public struct CatAPIClient: CatAPIClientProtocol {
             let decoder = JSONDecoder()
             let catImages = try decoder.decode([CatImageURLModel].self, from: data)
             totalFetched += catImages.count
-            
+
             // 許可された拡張子の画像のみをフィルタリング
             let filteredImages = catImages.filter { image in
                 guard let url = URL(string: image.url) else { return false }
                 let pathExtension = url.pathExtension.lowercased()
                 return allowedExtensions.contains(pathExtension)
             }
-            
+
             result += filteredImages
             pagesRetrieved += 1
 
             // ページを取得しても結果が増えない場合（全ての画像がフィルタリングされた場合）は終了
-            if filteredImages.isEmpty && result.count > 0 {
+            if filteredImages.isEmpty, result.count > 0 {
                 break
             }
         }

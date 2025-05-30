@@ -24,6 +24,6 @@ public actor CTImageLoader: CTImageLoaderProtocol {
             print("[CTImageLoader] [Info] 画像をダウンロード: \(url.lastPathComponent)")
         }
 
-        try await fileManager.saveImage(data, fileName: url.lastPathComponent, label: label, isVerified: false)
+        try await fileManager.saveImage(data, fileName: url.lastPathComponent, label: label)
     }
 }
