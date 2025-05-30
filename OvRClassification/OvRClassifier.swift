@@ -96,11 +96,9 @@ public actor OvRClassifier {
         // 分類結果を表示
         print("   分類結果:")
         let sortedFeatures = detectedFeatures.sorted { $0.label < $1.label }
-        for feature in sortedFeatures {
-            if feature.label != "Rest" {
-                let checkmark = feature.confidence >= threshold ? "✅" : "  "
-                print("     \(checkmark) \(feature.label): \(String(format: "%.3f", feature.confidence))")
-            }
+        for feature in sortedFeatures where feature.label != "Rest" {
+            let checkmark = feature.confidence >= threshold ? "✅" : "  "
+            print("     \(checkmark) \(feature.label): \(String(format: "%.3f", feature.confidence))")
         }
         print("----------------------------------------")
 
@@ -149,11 +147,9 @@ public actor OvRClassifier {
                     #if targetEnvironment(simulator)
                         if #available(iOS 17.0, *) {
                             let allDevices = MLComputeDevice.allComputeDevices
-                            for device in allDevices {
-                                if device.description.contains("MLCPUComputeDevice") {
-                                    request.setComputeDevice(.some(device), for: .main)
-                                    break
-                                }
+                            for device in allDevices where device.description.contains("MLCPUComputeDevice") {
+                                request.setComputeDevice(.some(device), for: .main)
+                                break
                             }
                         } else {
                             request.usesCPUOnly = true

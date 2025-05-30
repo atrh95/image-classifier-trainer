@@ -29,11 +29,10 @@ final class OvRClassifierTests: XCTestCase {
     /// 画像の分類処理がエラーなく完了する
     func testSingleClassifyImageFromURLCompletes() async throws {
         let threshold: Float = 0.5
-        let url = URL(string: "https://example.com/image.jpg")!
 
         _ = try await classifier.classifyImageFromURL(
-                from: url,
-                threshold: threshold
-            )
+            from: imageLoaderMock.testImageURL,
+            threshold: threshold
+        )
     }
 }

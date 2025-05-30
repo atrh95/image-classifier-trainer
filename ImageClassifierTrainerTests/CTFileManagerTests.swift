@@ -25,7 +25,7 @@ final class CTFileManagerTests: XCTestCase {
 
     /// 画像データを指定されたラベルのディレクトリに正しく保存できることを確認
     func testSaveImageToUnverifiedDirectory() async throws {
-        let imageData = "test image data".data(using: .utf8)!
+        let imageData = Data("test image data".utf8)
         let fileName = "test.jpg"
         let label = "testLabel"
 
@@ -46,7 +46,7 @@ final class CTFileManagerTests: XCTestCase {
 
     /// ファイルの存在確認が正しく動作することを確認
     func testFileExistsInUnverifiedAndVerifiedDirectories() async throws {
-        let imageData = "test image data".data(using: .utf8)!
+        let imageData = Data("test image data".utf8)
         let fileName = "test2.jpg"
         let label = "testLabel2"
 
@@ -65,7 +65,7 @@ final class CTFileManagerTests: XCTestCase {
 
     /// ファイル操作のエラーが適切に処理されることを確認
     func testSaveImageFailsWithInsufficientPermissions() async throws {
-        let imageData = "test".data(using: .utf8)!
+        let imageData = Data("test".utf8)
         let fileName = "test.jpg"
         let label = "testLabel"
 
@@ -74,7 +74,7 @@ final class CTFileManagerTests: XCTestCase {
 
         do {
             try await fileManager.saveImage(imageData, fileName: fileName, label: label)
-            XCTFail()
+            XCTFail("Expected saveImage to throw an error due to insufficient permissions")
         } catch {
             XCTAssertTrue(error is CTFileManagerError)
         }

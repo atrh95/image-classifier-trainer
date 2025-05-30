@@ -40,7 +40,7 @@ public struct CatAPIClient: CatAPIClientProtocol {
             pagesRetrieved += 1
 
             // ページを取得しても結果が増えない場合（全ての画像がフィルタリングされた場合）は終了
-            if filteredImages.isEmpty, result.count > 0 {
+            if filteredImages.isEmpty, !result.isEmpty {
                 break
             }
         }
