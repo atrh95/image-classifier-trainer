@@ -33,6 +33,9 @@ targets:
       - path: ImageClassifierTrainerTests
     dependencies:
       - target: OvRClassification
+      - target: CatAPIClient
+      - target: CTFileManager
+      - target: CTImageLoader
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.ImageClassifierTrainerTests

@@ -61,7 +61,7 @@ jobs:
             ci-outputs/test-results/all-tests/TestResults.xcresult
             ci-outputs/test-results/all-tests/junit.xml
           retention-days: 7
-      
+
       - name: Final Check
         id: final_check
         if: always() # Ensure this step always runs
@@ -72,4 +72,4 @@ jobs:
           else
             echo "One or more tests failed."
             exit 1
-          fi 
+          fi
