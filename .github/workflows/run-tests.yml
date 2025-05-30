@@ -47,7 +47,7 @@ jobs:
           xcodebuild test \
             -project "ImageClassifierTrainer.xcodeproj" \
             -scheme "ImageClassifierTrainerTests" \
-            -destination "platform=macOS" \
+            -destination "platform=macOS,arch=arm64" \
             -enableCodeCoverage NO \
             MACOSX_DEPLOYMENT_TARGET=15.2 \
             -resultBundlePath ./ci-outputs/test-results/all-tests/TestResults.xcresult \
