@@ -12,9 +12,6 @@ public final class MockCTImageLoader: CTImageLoaderProtocol {
         sampleImagesDirectory = currentFileURL
             .deletingLastPathComponent() // CTImageLoader
             .appendingPathComponent("SampleImage")
-
-        // ディレクトリが存在しない場合は作成
-        try? FileManager.default.createDirectory(at: sampleImagesDirectory, withIntermediateDirectories: true)
     }
 
     public func downloadImage(from _: URL) async throws -> Data {
