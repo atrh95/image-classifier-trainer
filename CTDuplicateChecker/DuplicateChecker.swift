@@ -27,16 +27,20 @@ public final actor DuplicateChecker: DuplicateCheckerProtocol {
 
     private func loadHashesFromDirectory(isVerified: Bool) async throws -> Set<String> {
         var hashes = Set<String>()
-        let directory = isVerified ? "Dataset/Verified" : "Dataset/Unverified"
+        let directory = isVerified ? "Verified" : "Unverified"
 
         // ディレクトリとそのサブディレクトリ内のすべての画像ファイルを取得
         let files = try await fileManager.getAllImageFiles(in: directory)
 
         for file in files {
             let fileURL = URL(fileURLWithPath: file)
-            if let imageData = try? await imageLoader.loadLocalImage(from: fileURL) {
-                let hash = calculateImageHash(imageData)
-                hashes.insert(hash)
+            do {
+                if let imageData = try await imageLoader.loadLocalImage(from: fileURL) {
+                    let hash = calculateImageHash(imageData)
+                    hashes.insert(hash)
+                }
+            } catch {
+                print("Failed to load image at \(file): \(error)")
             }
         }
 
