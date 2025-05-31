@@ -9,55 +9,72 @@ public func runMainProcess(
     classifier: OvRClassifier,
     fileManager: CTFileManagerProtocol,
     imageLoader: CTImageLoaderProtocol,
-    fetchImageCount: Int = 10,
-    classificationThreshold: Float = 0.85
+    fetchImageCount: Int = 100000,
+    classificationThreshold: Float = 0.85,
+    batchSize: Int = 100
 ) async throws {
     var labelCounts: [String: Int] = [:]
+    let totalBatches = (fetchImageCount + batchSize - 1) / batchSize
+    var totalProcessedImages = 0
 
     print("🚀 画像URLの取得を開始...")
-    // 画像のダウンロードと分類
-    let urlModels = try await client.fetchImageURLs(requestedCount: fetchImageCount, batchSize: 10)
-    print("   \(urlModels.count)件のURLを取得しました")
+    print("   \(fetchImageCount)件の画像を\(batchSize)件ずつ\(totalBatches)バッチに分割して処理します")
 
-    print("🔍 画像の分類を開始...")
-    for (index, model) in urlModels.enumerated() {
-        print("   \(model.url)を処理中...(\(index + 1)/\(urlModels.count)件目)")
-        guard let url = URL(string: model.url) else { continue }
+    for batchIndex in 0..<totalBatches {
+        let startIndex = batchIndex * batchSize
+        let endIndex = min(startIndex + batchSize, fetchImageCount)
+        let currentBatchSize = endIndex - startIndex
 
-        // 画像をダウンロード
-        let imageData = try await imageLoader.downloadImage(from: url)
+        print("\n📦 バッチ \(batchIndex + 1)/\(totalBatches) の処理を開始...")
+        print("   \(startIndex + 1)〜\(endIndex)件目の画像を処理します")
 
-        // 分類を実行
-        if let feature = try await classifier.classifyImageFromURL(
-            from: url,
-            threshold: classificationThreshold
-        ) {
-            // 確認済みと未確認の両方のデータセットで重複チェック
-            let existsInVerified = await fileManager.fileExists(
-                fileName: url.lastPathComponent,
-                label: feature.label,
-                isVerified: true
-            )
-            let existsInUnverified = await fileManager.fileExists(
-                fileName: url.lastPathComponent,
-                label: feature.label,
-                isVerified: false
-            )
+        // 画像のダウンロードと分類
+        let urlModels = try await client.fetchImageURLs(requestedCount: currentBatchSize, batchSize: 10)
+        print("   \(urlModels.count)件のURLを取得しました")
 
-            if !existsInVerified, !existsInUnverified {
-                // 未確認データセットに保存
-                try await fileManager.saveImage(
-                    feature.imageData,
+        print("🔍 画像の分類を開始...")
+        for (index, model) in urlModels.enumerated() {
+            totalProcessedImages += 1
+            print("   \(model.url)を処理中...(\(totalProcessedImages)/\(fetchImageCount)件目)")
+            guard let url = URL(string: model.url) else { continue }
+
+            // 画像をダウンロード
+            let imageData = try await imageLoader.downloadImage(from: url)
+
+            // 分類を実行
+            if let feature = try await classifier.classifyImageFromURL(
+                from: url,
+                threshold: classificationThreshold
+            ) {
+                // 確認済みと未確認の両方のデータセットで重複チェック
+                let existsInVerified = await fileManager.fileExists(
                     fileName: url.lastPathComponent,
-                    label: feature.label
+                    label: feature.label,
+                    isVerified: true
                 )
-                // 最終的な集計のためにカウント
-                labelCounts[feature.label, default: 0] += 1
+                let existsInUnverified = await fileManager.fileExists(
+                    fileName: url.lastPathComponent,
+                    label: feature.label,
+                    isVerified: false
+                )
+
+                if !existsInVerified, !existsInUnverified {
+                    // 未確認データセットに保存
+                    try await fileManager.saveImage(
+                        feature.imageData,
+                        fileName: url.lastPathComponent,
+                        label: feature.label
+                    )
+                    // 最終的な集計のためにカウント
+                    labelCounts[feature.label, default: 0] += 1
+                }
             }
         }
+
+        print("✅ バッチ \(batchIndex + 1)/\(totalBatches) の処理が完了しました")
     }
 
-    print("🎉 自動分類が完了しました！")
+    print("\n🎉 自動分類が完了しました！")
     // 分類結果の集計を表示
     for (label, count) in labelCounts {
         print("\(label): \(count)枚")
