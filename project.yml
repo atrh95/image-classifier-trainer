@@ -26,21 +26,7 @@ targets:
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGNING_REQUIRED: NO
 
-  DuplicateImageDetector:
-    type: tool
-    platform: macOS
-    sources:
-      - path: DuplicateImageDetector
-    dependencies:
-      - target: CTFileManager
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.DuplicateImageDetector
-        MACOSX_DEPLOYMENT_TARGET: "15.2"
-        CODE_SIGNING_ALLOWED: NO
-        CODE_SIGNING_REQUIRED: NO
-
-  ImageClassifierTrainerTests:
+  OvRImageClassifierTrainerTests:
     type: bundle.unit-test
     platform: macOS
     sources:
@@ -123,3 +109,54 @@ targets:
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGNING_REQUIRED: NO
     dependencies: []
+
+  DuplicateChecker:
+    type: framework
+    platform: macOS
+    sources:
+      - path: DuplicateChecker
+        excludes:
+          - "**/*.md"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.DuplicateChecker
+        PRODUCT_NAME: DuplicateChecker
+        MACOSX_DEPLOYMENT_TARGET: "15.2"
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+    dependencies:
+      - target: CTFileManager
+
+  name: DuplicateChecker
+  options:
+    bundleIdPrefix: com.akitora
+    deploymentTarget:
+      iOS: 15.0
+    xcodeVersion: "15.0"
+
+  targets:
+    DuplicateChecker:
+      type: framework
+      platform: iOS
+      sources:
+        - path: DuplicateChecker.swift
+        - path: DuplicateCheckerProtocol.swift
+      dependencies:
+        - framework: CTFileManager
+        - framework: CTImageLoader
+      settings:
+        base:
+          INOPLIST_FILE: DuplicateChecker/Info.plist
+          PRODUCT_BUNDLE_IDENTIFIER: com.akitora.DuplicateChecker
+
+  DuplicateCheckerTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: MockDuplicateChecker.swift
+    dependencies:
+      - target: DuplicateChecker
+    settings:
+      base:
+        INOPLIST_FILE: DuplicateCheckerTests/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.DuplicateCheckerTests
