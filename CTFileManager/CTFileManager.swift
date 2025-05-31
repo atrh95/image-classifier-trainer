@@ -1,8 +1,10 @@
 import Foundation
+import CryptoKit
 
 public actor CTFileManager: CTFileManagerProtocol {
     private let fileManager = FileManager.default
     private let datasetDirectory: URL
+    private var imageHashes: [String: String] = [:] // ハッシュ値とファイル名のマッピング
 
     public init(datasetDirectory: URL? = nil) {
         if let datasetDirectory {
@@ -25,14 +27,32 @@ public actor CTFileManager: CTFileManagerProtocol {
         datasetDirectory.appendingPathComponent("Verified")
     }
 
+    /// 画像データのハッシュ値を計算
+    private func calculateImageHash(_ imageData: Data) -> String {
+        let hash = SHA256.hash(data: imageData)
+        return hash.compactMap { String(format: "%02x", $0) }.joined()
+    }
+
     /// 画像データを指定されたラベルのディレクトリに保存
     public func saveImage(_ imageData: Data, fileName: String, label: String) async throws {
         do {
+            // 画像のハッシュ値を計算
+            let imageHash = calculateImageHash(imageData)
+            
+            // 同じハッシュ値を持つ画像が既に存在するかチェック
+            if let existingFileName = imageHashes[imageHash] {
+                print("   ⚠️ 内容が重複しているため保存をスキップ: \(fileName) (既存ファイル: \(existingFileName))")
+                return
+            }
+
             try fileManager.createDirectory(at: unverifiedDirectory, withIntermediateDirectories: true)
             let labelDirectory = unverifiedDirectory.appendingPathComponent(label)
             try fileManager.createDirectory(at: labelDirectory, withIntermediateDirectories: true)
             let fileURL = labelDirectory.appendingPathComponent(fileName)
             try imageData.write(to: fileURL)
+            
+            // ハッシュ値を保存
+            imageHashes[imageHash] = fileName
         } catch {
             throw CTFileManagerError.fileOperationFailed(error)
         }

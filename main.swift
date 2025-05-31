@@ -3,6 +3,7 @@ import CTFileManager
 import CTImageLoader
 import Foundation
 import OvRClassification
+import DuplicateImageDetector
 
 public func runMainProcess(
     client: CatAPIClient,
@@ -17,6 +18,7 @@ public func runMainProcess(
     let totalBatches = (fetchImageCount + batchSize - 1) / batchSize
     var totalProcessedImages = 0
     var totalProcessingTime: TimeInterval = 0
+    var totalProcessedCount = 0
 
     print("🚀 画像URLの取得を開始...")
     print("   \(fetchImageCount)件の画像を\(batchSize)件ずつ\(totalBatches)バッチに分割して処理します")
@@ -43,9 +45,9 @@ public func runMainProcess(
             // 画像をダウンロード
             let imageData = try await imageLoader.downloadImage(from: url)
 
-            // 分類を実行
-            if let feature = try await classifier.classifyImageFromURL(
-                from: url,
+            // 分類を実行（ダウンロード済みデータを渡す想定の API へ変更）
+            if let feature = try await classifier.classifyImage(
+                data: imageData,
                 threshold: classificationThreshold
             ) {
                 // 確認済みと未確認の両方のデータセットで重複チェック
@@ -69,8 +71,11 @@ public func runMainProcess(
                     )
                     // 最終的な集計のためにカウント
                     labelCounts[feature.label, default: 0] += 1
+                } else {
+                    print("   ⚠️ 重複のため保存をスキップ: \(url.lastPathComponent) (\(feature.label))")
                 }
             }
+            totalProcessedCount += 1
         }
 
         let batchEndTime = Date()
@@ -108,6 +113,18 @@ public func runMainProcess(
     print("自動分類を行った画像は Dataset/Unverified ディレクトリに保存されました。")
     print("画像を確認し、分類が正しい場合は Dataset/Verified ディレクトリに移動してください。")
     print("次回の分類時に重複確認が両方のディレクトリに対して行われます")
+
+    // 重複画像の検出
+    print("\n🔍 重複画像の検出を開始...")
+    let scanner = DuplicateImageScanner(fileManager: fileManager)
+    let datasetURL = URL(fileURLWithPath: "Dataset/Unverified")
+    let deletedCount = try await scanner.scanDirectory(datasetURL)
+
+    // 処理の完了
+    print("\n✅ 処理が完了しました")
+    print("   処理時間: \(String(format: "%.1f", totalProcessingTime))秒")
+    print("   処理した画像: \(totalProcessedCount)枚")
+    print("   保存した画像: \(labelCounts.values.reduce(0, +) - deletedCount)枚")
 }
 
 let semaphore = DispatchSemaphore(value: 0)

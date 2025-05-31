@@ -26,6 +26,20 @@ targets:
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGNING_REQUIRED: NO
 
+  DuplicateImageDetector:
+    type: tool
+    platform: macOS
+    sources:
+      - path: DuplicateImageDetector
+    dependencies:
+      - target: CTFileManager
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.DuplicateImageDetector
+        MACOSX_DEPLOYMENT_TARGET: "15.2"
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+
   ImageClassifierTrainerTests:
     type: bundle.unit-test
     platform: macOS
