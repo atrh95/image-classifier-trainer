@@ -1,8 +1,8 @@
-# Image Classifier Trainer
+# OvR Image Classifier Trainer
 
 ## 概要
 
-Image Classifier Trainerの目的は、事前にトレーニングされた画像分類モデルを行って、APIから画像を取得し、画像の分類を行い、データセットを自動化することです。
+OvR Image Classifier Trainerの目的は、事前にトレーニングされた画像分類モデルを行って、APIから画像を取得し、画像の分類を行い、データセットを自動化することです。
 
 ## ディレクトリ構成
 
@@ -15,7 +15,7 @@ Image Classifier Trainerの目的は、事前にトレーニングされた画�
 ├── Dataset/
 │   ├── Verified/
 │   └── Unverified/
-├── ImageClassifierTrainerTests/
+├── OvRImageClassifierTrainerTests/
 └── main.swift
 ```
 
@@ -26,7 +26,7 @@ Image Classifier Trainerの目的は、事前にトレーニングされた画�
 
 ## テスト
 
-`ImageClassifierTrainerTests` ディレクトリにユニットテストが含まれており、主に以下の点をテストしています
+`OvRImageClassifierTrainerTests` ディレクトリにユニットテストが含まれており、主に以下の点をテストしています
 
 * 画像データを指定されたラベルのディレクトリに正しく保存できること
 * 画像の分類処理がエラーなく完了すること

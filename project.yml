@@ -1,6 +1,6 @@
 # mint run xcodegen generate
 
-name: ImageClassifierTrainer
+name: OvRImageClassifierTrainer
 options:
   bundleIdPrefix: com.akitora
   deploymentTarget:
@@ -9,7 +9,7 @@ options:
   generateEmptyDirectories: true
 
 targets:
-  ImageClassifierTrainer:
+  OvRImageClassifierTrainer:
     type: tool
     platform: macOS
     sources:
@@ -21,7 +21,7 @@ targets:
       - target: CatAPIClient
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.ImageClassifierTrainer
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.OvRImageClassifierTrainer
         MACOSX_DEPLOYMENT_TARGET: "15.2"
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGNING_REQUIRED: NO
@@ -44,7 +44,7 @@ targets:
     type: bundle.unit-test
     platform: macOS
     sources:
-      - path: ImageClassifierTrainerTests
+      - path: OvRImageClassifierTrainerTests
     dependencies:
       - target: OvRClassification
       - target: CatAPIClient
@@ -52,7 +52,7 @@ targets:
       - target: CTImageLoader
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.ImageClassifierTrainerTests
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.OvRImageClassifierTrainerTests
         MACOSX_DEPLOYMENT_TARGET: "15.2"
         GENERATE_INFOPLIST_FILE: true
         CODE_SIGNING_ALLOWED: NO
