@@ -33,9 +33,9 @@ public final class MockCTFileManager: CTFileManagerProtocol {
             throw CTFileManagerError.fileOperationFailed(error)
         }
     }
-    
+
     /// 指定されたディレクトリ内のすべての画像ファイルのパスを取得
     public func getAllImageFiles(in directory: String) async throws -> [String] {
-        return mockImageFiles[directory] ?? []
+        mockImageFiles[directory] ?? []
     }
 }

@@ -56,7 +56,7 @@ public actor CTFileManager: CTFileManagerProtocol {
             throw CTFileManagerError.fileOperationFailed(error)
         }
     }
-    
+
     /// 指定されたディレクトリ内のすべての画像ファイルのパスを取得
     public func getAllImageFiles(in directory: String) async throws -> [String] {
         do {
@@ -66,7 +66,7 @@ public actor CTFileManager: CTFileManagerProtocol {
                 includingPropertiesForKeys: [.isRegularFileKey],
                 options: [.skipsHiddenFiles]
             )
-            
+
             var imageFiles: [String] = []
             while let fileURL = enumerator?.nextObject() as? URL {
                 let fileExtension = fileURL.pathExtension.lowercased()
