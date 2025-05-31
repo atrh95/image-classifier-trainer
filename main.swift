@@ -16,11 +16,13 @@ public func runMainProcess(
     var labelCounts: [String: Int] = [:]
     let totalBatches = (fetchImageCount + batchSize - 1) / batchSize
     var totalProcessedImages = 0
+    var totalProcessingTime: TimeInterval = 0
 
     print("🚀 画像URLの取得を開始...")
     print("   \(fetchImageCount)件の画像を\(batchSize)件ずつ\(totalBatches)バッチに分割して処理します")
 
     for batchIndex in 0..<totalBatches {
+        let batchStartTime = Date()
         let startIndex = batchIndex * batchSize
         let endIndex = min(startIndex + batchSize, fetchImageCount)
         let currentBatchSize = endIndex - startIndex
@@ -71,7 +73,30 @@ public func runMainProcess(
             }
         }
 
+        let batchEndTime = Date()
+        let batchProcessingTime = batchEndTime.timeIntervalSince(batchStartTime)
+        totalProcessingTime += batchProcessingTime
+        
+        // 平均バッチ処理時間を計算
+        let averageBatchTime = totalProcessingTime / Double(batchIndex + 1)
+        let remainingBatches = totalBatches - (batchIndex + 1)
+        let estimatedRemainingTime = averageBatchTime * Double(remainingBatches)
+        
+        // 予測終了時刻を計算
+        let estimatedEndTime = Date().addingTimeInterval(estimatedRemainingTime)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        let estimatedEndTimeString = dateFormatter.string(from: estimatedEndTime)
+        
+        // 残り時間をHH:MM:SS形式に変換
+        let hours = Int(estimatedRemainingTime) / 3600
+        let minutes = (Int(estimatedRemainingTime) % 3600) / 60
+        let seconds = Int(estimatedRemainingTime) % 60
+        let remainingTimeString = String(format: "%d時間%d分%d秒", hours, minutes, seconds)
+        
         print("✅ バッチ \(batchIndex + 1)/\(totalBatches) の処理が完了しました")
+        print("   このバッチの処理時間: \(String(format: "%.1f", batchProcessingTime))秒")
+        print("   予測終了時刻: \(estimatedEndTimeString) (残り\(remainingTimeString))")
     }
 
     print("\n🎉 自動分類が完了しました！")
