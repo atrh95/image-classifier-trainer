@@ -2,7 +2,10 @@ import Foundation
 
 public final class MockCTFileManager: CTFileManagerProtocol {
     public var saveImageError: Error?
+    /// fileExistsメソッドの戻り値を制御するためのプロパティ
     public var fileExistsResult: Bool = false
+    /// 指定されたディレクトリ内の画像ファイルパスのリストを設定するためのプロパティ
+    public var mockImageFiles: [String: [String]] = [:]
     private let datasetDirectory: URL?
 
     public init(datasetDirectory: URL? = nil) {
@@ -29,5 +32,10 @@ public final class MockCTFileManager: CTFileManagerProtocol {
         } catch {
             throw CTFileManagerError.fileOperationFailed(error)
         }
+    }
+    
+    /// 指定されたディレクトリ内のすべての画像ファイルのパスを取得
+    public func getAllImageFiles(in directory: String) async throws -> [String] {
+        return mockImageFiles[directory] ?? []
     }
 }

@@ -1,7 +1,7 @@
 import Foundation
 
 /// 画像の重複チェックを行うプロトコル
-protocol DuplicateCheckerProtocol {
+public protocol DuplicateCheckerProtocol {
     /// 既存の画像ハッシュを初期化する
     func initializeHashes() async throws
     

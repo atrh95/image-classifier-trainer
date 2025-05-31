@@ -1,6 +1,7 @@
 import CatAPIClient
 import CTFileManager
 import CTImageLoader
+import CTDuplicateChecker
 import Foundation
 import OvRClassification
 
@@ -14,7 +15,7 @@ public func runMainProcess(
     classifier: OvRClassifier,
     fileManager: CTFileManagerProtocol,
     imageLoader: CTImageLoaderProtocol,
-    duplicateChecker: DuplicateCheckerProtocol
+    duplicateChecker: Dup
 ) async throws {
     guard defaultBatchSize >= 10 else {
         throw NSError(domain: "InvalidParameter", code: -1, userInfo: [NSLocalizedDescriptionKey: "batchSizeは10以上である必要があります"])

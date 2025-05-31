@@ -1,14 +1,19 @@
+import CTFileManager
+import CTImageLoader
 import Foundation
+import CryptoKit
 
-final actor DuplicateChecker: DuplicateCheckerProtocol {
+public final actor DuplicateChecker: DuplicateCheckerProtocol {
     private var imageHashes: Set<String> = []
     private let fileManager: CTFileManagerProtocol
+    private let imageLoader: CTImageLoaderProtocol
     
-    init(fileManager: CTFileManagerProtocol) {
+    public init(fileManager: CTFileManagerProtocol, imageLoader: CTImageLoaderProtocol) {
         self.fileManager = fileManager
+        self.imageLoader = imageLoader
     }
     
-    func initializeHashes() async throws {
+    public func initializeHashes() async throws {
         // 既存のハッシュをクリア
         imageHashes.removeAll()
         
@@ -28,8 +33,9 @@ final actor DuplicateChecker: DuplicateCheckerProtocol {
         let files = try await fileManager.getAllImageFiles(in: directory)
         
         for file in files {
-            if let imageData = try? await fileManager.loadImageData(fileName: file, label: "", isVerified: isVerified) {
-                let hash = String(imageData.hashValue)
+            let fileURL = URL(fileURLWithPath: file)
+            if let imageData = try? await imageLoader.loadLocalImage(from: fileURL) {
+                let hash = calculateImageHash(imageData)
                 hashes.insert(hash)
             }
         }
@@ -38,7 +44,7 @@ final actor DuplicateChecker: DuplicateCheckerProtocol {
     }
     
     /// 画像が重複しているかチェック、重複がない場合はtrue、重複がある場合はfalseを返す
-    func checkDuplicate(imageData: Data, fileName: String, label: String) async throws -> Bool {
+    public func checkDuplicate(imageData: Data, fileName: String, label: String) async throws -> Bool {
         // まず、ファイル名がどちらかのデータセットに存在するかチェック
         let existsInVerified = await fileManager.fileExists(
             fileName: fileName,
@@ -56,7 +62,7 @@ final actor DuplicateChecker: DuplicateCheckerProtocol {
         }
         
         // 次に、画像コンテンツのハッシュが存在するかチェック
-        let hash = String(imageData.hashValue)
+        let hash = calculateImageHash(imageData)
         if imageHashes.contains(hash) {
             return false
         }
@@ -66,8 +72,13 @@ final actor DuplicateChecker: DuplicateCheckerProtocol {
     
     /// 新しい画像のハッシュを追加する
     /// - Parameter imageData: 追加する画像データ
-    func addHash(imageData: Data) async {
-        let hash = String(imageData.hashValue)
+    public func addHash(imageData: Data) async {
+        let hash = calculateImageHash(imageData)
         imageHashes.insert(hash)
+    }
+    
+    private func calculateImageHash(_ imageData: Data) -> String {
+        let hash = SHA256.hash(data: imageData)
+        return hash.compactMap { String(format: "%02x", $0) }.joined()
     }
 } 

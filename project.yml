@@ -19,6 +19,7 @@ targets:
       - target: CTImageLoader
       - target: CTFileManager
       - target: CatAPIClient
+      - target: CTDuplicateChecker
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.akitora.OvRImageClassifierTrainer
@@ -36,6 +37,7 @@ targets:
       - target: CatAPIClient
       - target: CTFileManager
       - target: CTImageLoader
+      - target: CTDuplicateChecker
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.OvRImageClassifierTrainerTests
@@ -110,53 +112,19 @@ targets:
         CODE_SIGNING_REQUIRED: NO
     dependencies: []
 
-  DuplicateChecker:
+  CTDuplicateChecker:
     type: framework
     platform: macOS
     sources:
-      - path: DuplicateChecker
+      - path: CTDuplicateChecker
         excludes:
           - "**/*.md"
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.DuplicateChecker
-        PRODUCT_NAME: DuplicateChecker
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.CTDuplicateChecker
+        PRODUCT_NAME: CTDuplicateChecker
         MACOSX_DEPLOYMENT_TARGET: "15.2"
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGNING_REQUIRED: NO
     dependencies:
       - target: CTFileManager
-
-  name: DuplicateChecker
-  options:
-    bundleIdPrefix: com.akitora
-    deploymentTarget:
-      iOS: 15.0
-    xcodeVersion: "15.0"
-
-  targets:
-    DuplicateChecker:
-      type: framework
-      platform: iOS
-      sources:
-        - path: DuplicateChecker.swift
-        - path: DuplicateCheckerProtocol.swift
-      dependencies:
-        - framework: CTFileManager
-        - framework: CTImageLoader
-      settings:
-        base:
-          INOPLIST_FILE: DuplicateChecker/Info.plist
-          PRODUCT_BUNDLE_IDENTIFIER: com.akitora.DuplicateChecker
-
-  DuplicateCheckerTests:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - path: MockDuplicateChecker.swift
-    dependencies:
-      - target: DuplicateChecker
-    settings:
-      base:
-        INOPLIST_FILE: DuplicateCheckerTests/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.DuplicateCheckerTests
