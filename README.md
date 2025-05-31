@@ -9,6 +9,7 @@ OvR Image Classifier Trainerの目的は、事前にトレーニングされた�
 ```
 .
 ├── CatAPIClient/
+├── CTDuplicateChecker/
 ├── CTFileManager/
 ├── CTImageLoader/
 ├── OvRClassification/
