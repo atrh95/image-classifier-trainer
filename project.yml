@@ -19,6 +19,7 @@ targets:
       - target: CTImageLoader
       - target: CTFileManager
       - target: CatAPIClient
+      - target: CTDuplicateChecker
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.akitora.OvRImageClassifierTrainer
@@ -36,6 +37,7 @@ targets:
       - target: CatAPIClient
       - target: CTFileManager
       - target: CTImageLoader
+      - target: CTDuplicateChecker
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.OvRImageClassifierTrainerTests
@@ -109,3 +111,20 @@ targets:
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGNING_REQUIRED: NO
     dependencies: []
+
+  CTDuplicateChecker:
+    type: framework
+    platform: macOS
+    sources:
+      - path: CTDuplicateChecker
+        excludes:
+          - "**/*.md"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.CTDuplicateChecker
+        PRODUCT_NAME: CTDuplicateChecker
+        MACOSX_DEPLOYMENT_TARGET: "15.2"
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+    dependencies:
+      - target: CTFileManager

@@ -15,4 +15,18 @@ public actor CTImageLoader: CTImageLoaderProtocol {
 
         return data
     }
+
+    /// ローカルの画像ファイルからデータを読み込む
+    public func loadLocalImage(from url: URL) async throws -> Data {
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            throw ImageLoaderError.fileNotFound
+        }
+
+        let fileExtension = url.pathExtension.lowercased()
+        guard ["jpg", "jpeg", "png"].contains(fileExtension) else {
+            throw ImageLoaderError.unsupportedFileType
+        }
+
+        return try Data(contentsOf: url)
+    }
 }

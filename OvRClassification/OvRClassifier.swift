@@ -48,7 +48,16 @@ public actor OvRClassifier {
         let data = try await imageLoader.downloadImage(from: url)
 
         // 全てのモデルで画像を分類し、閾値を超えた特徴が1つだけの場合のみ結果を返す
-        if let feature = try await classifySingleImage(data, probabilityThreshold: threshold) {
+        return try await classifyImage(data: data, threshold: threshold)
+    }
+
+    /// ダウンロード済みの画像データを分類し、閾値を超えた場合は保存する
+    public func classifyImage(
+        data imageData: Data,
+        threshold: Float
+    ) async throws -> DetectedFeature? {
+        // 全てのモデルで画像を分類し、閾値を超えた特徴が1つだけの場合のみ結果を返す
+        if let feature = try await classifySingleImage(imageData, probabilityThreshold: threshold) {
             return feature
         }
         return nil
@@ -96,7 +105,7 @@ public actor OvRClassifier {
         // 分類結果を表示
         print("   分類結果:")
         let sortedFeatures = detectedFeatures.sorted { $0.label < $1.label }
-        for feature in sortedFeatures where feature.label != "Rest" {
+        for feature in sortedFeatures where feature.label != "rest" {
             let checkmark = feature.confidence >= threshold ? "✅" : "  "
             print("     \(checkmark) \(feature.label): \(String(format: "%.3f", feature.confidence))")
         }
@@ -104,12 +113,18 @@ public actor OvRClassifier {
 
         // 閾値を超えた特徴をフィルタリング
         let thresholdedFeatures = detectedFeatures.filter { $0.confidence >= threshold }
-        let nonRestThresholdedFeatures = thresholdedFeatures.filter { $0.label != "Rest" }
+        let nonRestThresholdedFeatures = thresholdedFeatures.filter { $0.label != "rest" }
 
         // 閾値を超えた特徴が1つだけの場合のみ結果を返す
         guard nonRestThresholdedFeatures.count == 1,
               let feature = nonRestThresholdedFeatures.first
         else {
+            if !nonRestThresholdedFeatures.isEmpty {
+                print("⚠️ 閾値を超えた特徴が複数あるため保存をスキップ:")
+                for feature in nonRestThresholdedFeatures {
+                    print("     - \(feature.label): \(String(format: "%.3f", feature.confidence))")
+                }
+            }
             return nil
         }
 
