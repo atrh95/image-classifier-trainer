@@ -1,6 +1,6 @@
 [
   {
-    "shortDescription" : "クラス: human_hands_detected, Rest\n訓練正解率: 100.0%\n検証正解率: 95.0%\n再現率: 90.0%, 適合率: 100.0%, F1スコア: 94.7%\nデータ拡張: ImageAugmentationOptions(rawValue: 18)\n特徴抽出器: ScenePrint(revision: 2)",
+    "shortDescription" : "mouth_open: 144枚\nRest: 144枚\n訓練正解率: 100.0%\n検証正解率: 78.6%\n再現率: 71.4%\n適合率: 83.3%\nF1スコア: 0.769\nデータ拡張: なし\n特徴抽出器: ScenePrint",
     "metadataOutputVersion" : "3.0",
     "outputSchema" : [
       {
@@ -19,7 +19,7 @@
         "shortDescription" : ""
       }
     ],
-    "version" : "v22",
+    "version" : "v25",
     "modelParameters" : [
 
     ],
@@ -63,10 +63,10 @@
       }
     ],
     "classLabels" : [
-      "Rest",
-      "human_hands_detected"
+      "mouth_open",
+      "rest"
     ],
-    "generatedClassName" : "ScaryCatScreeningML_OvR_human_hands_detected_v22",
+    "generatedClassName" : "ScaryCatScreeningML_OvR_mouth_open_v25",
     "userDefinedMetadata" : {
       "com.apple.createml.version" : "15.5.0"
     },
