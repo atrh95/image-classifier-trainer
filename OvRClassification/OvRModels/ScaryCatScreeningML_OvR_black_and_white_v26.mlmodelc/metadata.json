@@ -1,6 +1,6 @@
 [
   {
-    "shortDescription" : "sphynx: 80枚\nRest: 80枚\n訓練正解率: 100.0%\n検証正解率: 100.0%\n再現率: 100.0%\n適合率: 100.0%\nF1スコア: 1.000\nデータ拡張: なし\n特徴抽出器: ScenePrint",
+    "shortDescription" : "black_and_white: 301枚\nRest: 304枚\n訓練正解率: 100.0%\n検証正解率: 100.0%\n再現率: 100.0%\n適合率: 100.0%\nF1スコア: 1.000\nデータ拡張: なし\n特徴抽出器: ScenePrint",
     "metadataOutputVersion" : "3.0",
     "outputSchema" : [
       {
@@ -19,7 +19,7 @@
         "shortDescription" : ""
       }
     ],
-    "version" : "v25",
+    "version" : "v26",
     "modelParameters" : [
 
     ],
@@ -63,10 +63,10 @@
       }
     ],
     "classLabels" : [
-      "rest",
-      "sphynx"
+      "black_and_white",
+      "rest"
     ],
-    "generatedClassName" : "ScaryCatScreeningML_OvR_sphynx_v25",
+    "generatedClassName" : "ScaryCatScreeningML_OvR_black_and_white_v26",
     "userDefinedMetadata" : {
       "com.apple.createml.version" : "15.5.0"
     },

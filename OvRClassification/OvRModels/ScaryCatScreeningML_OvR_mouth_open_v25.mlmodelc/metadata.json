@@ -1,6 +1,6 @@
 [
   {
-    "shortDescription" : "mouth_open: 144枚\nRest: 144枚\n訓練正解率: 100.0%\n検証正解率: 78.6%\n再現率: 71.4%\n適合率: 83.3%\nF1スコア: 0.769\nデータ拡張: なし\n特徴抽出器: ScenePrint",
+    "shortDescription" : "mouth_open: 186枚\nRest: 188枚\n訓練正解率: 100.0%\n検証正解率: 94.4%\n再現率: 100.0%\n適合率: 90.0%\nF1スコア: 0.947\nデータ拡張: なし\n特徴抽出器: ScenePrint",
     "metadataOutputVersion" : "3.0",
     "outputSchema" : [
       {
