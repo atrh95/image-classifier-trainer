@@ -1,17 +1,15 @@
-# OvR Image Classifier Trainer
-
 ## 概要
 
-OvR Image Classifier Trainerの目的は、事前にトレーニングされた画像分類モデルを行って、APIから画像を取得し、画像の分類を行い、データセットを自動化することです。
+事前にトレーニングされた画像分類モデルを行って、APIから画像を取得し、画像の分類を行い、データセットの構築の一部を自動化します。
 
 ## ディレクトリ構成
 
 ```
 .
 ├── CatAPIClient/
-├── CTDuplicateChecker/
-├── CTFileManager/
-├── CTImageLoader/
+├── SLDuplicateChecker/
+├── SLFileManager/
+├── SLImageLoader/
 ├── OvRClassification/
 ├── Dataset/
 │   ├── Verified/
@@ -58,14 +56,14 @@ OvR Image Classifier Trainerの目的は、事前にトレーニングされた�
 
 ## テスト
 
-`OvRImageClassifierTrainerTests` ディレクトリにユニットテストが含まれており、以下の点をテストしています：
+`SingleLabeledDatasetBuilderTests` ディレクトリにユニットテストが含まれており、以下の点をテストしています：
 
-* 画像データの保存（CTFileManagerTests）
+* 画像データの保存（SLFileManagerTests）
   - 指定されたラベルのディレクトリに正しく保存できること
   - ファイルの存在確認が正しく動作すること
   - ファイル操作のエラーが適切に処理されること
 
-* 重複チェック（CTDuplicateCheckerTests）
+* 重複チェック（SLDuplicateCheckerTests）
   - 確認済みと未確認の両方のディレクトリから画像ハッシュを読み込めること
   - 同じファイル名が存在する場合に重複と判定されること
   - 同じ画像ハッシュがメモリ上に存在する場合に重複と判定されること

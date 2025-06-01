@@ -1,18 +1,17 @@
-import CatAPIClient
-import CTFileManager
-import CTImageLoader
 import OvRClassification
+import SLFileManager
+import SLImageLoader
 import XCTest
 
 final class OvRClassifierTests: XCTestCase {
     private var classifier: OvRClassifier!
-    private var fileManagerMock: MockCTFileManager!
-    private var imageLoaderMock: MockCTImageLoader!
+    private var fileManagerMock: MockSLFileManager!
+    private var imageLoaderMock: MockSLImageLoader!
 
     override func setUp() async throws {
         try await super.setUp()
-        fileManagerMock = MockCTFileManager()
-        imageLoaderMock = MockCTImageLoader()
+        fileManagerMock = MockSLFileManager()
+        imageLoaderMock = MockSLImageLoader()
         classifier = try await OvRClassifier(
             fileManager: fileManagerMock,
             imageLoader: imageLoaderMock

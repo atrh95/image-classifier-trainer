@@ -2,7 +2,7 @@ import Foundation
 
 public final class MockCatAPIClient: CatAPIClientProtocol {
     public var fetchImageURLsError: Error?
-    // MockCTImageLoaderがサンプル画像を使用するため、これらのURLは実際には使用されない
+    // MockSLImageLoaderがサンプル画像を使用するため、これらのURLは実際には使用されない
     private let dummyData = [
         (id: "cat1", url: "https://example.com/cat1.jpg", width: 800, height: 600),
         (id: "cat2", url: "https://example.com/cat2.jpg", width: 1024, height: 768),

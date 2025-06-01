@@ -1,6 +1,6 @@
 # mint run xcodegen generate
 
-name: OvRImageClassifierTrainer
+name: SingleLabeledDatasetBuilder
 options:
   bundleIdPrefix: com.akitora
   deploymentTarget:
@@ -9,38 +9,38 @@ options:
   generateEmptyDirectories: true
 
 targets:
-  OvRImageClassifierTrainer:
+  SingleLabeledDatasetBuilder:
     type: tool
     platform: macOS
     sources:
       - path: main.swift
     dependencies:
       - target: OvRClassification
-      - target: CTImageLoader
-      - target: CTFileManager
+      - target: SLImageLoader
+      - target: SLFileManager
       - target: CatAPIClient
-      - target: CTDuplicateChecker
+      - target: SLDuplicateChecker
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.OvRImageClassifierTrainer
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.SingleLabeledDatasetBuilder
         MACOSX_DEPLOYMENT_TARGET: "15.2"
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGNING_REQUIRED: NO
 
-  OvRImageClassifierTrainerTests:
+  SingleLabeledDatasetBuilderTests:
     type: bundle.unit-test
     platform: macOS
     sources:
-      - path: OvRImageClassifierTrainerTests
+      - path: SingleLabeledDatasetBuilderTests
     dependencies:
       - target: OvRClassification
       - target: CatAPIClient
-      - target: CTFileManager
-      - target: CTImageLoader
-      - target: CTDuplicateChecker
+      - target: SLFileManager
+      - target: SLImageLoader
+      - target: SLDuplicateChecker
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.OvRImageClassifierTrainerTests
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.SingleLabeledDatasetBuilderTests
         MACOSX_DEPLOYMENT_TARGET: "15.2"
         GENERATE_INFOPLIST_FILE: true
         CODE_SIGNING_ALLOWED: NO
@@ -54,8 +54,8 @@ targets:
         excludes:
           - "**/*.md"
     dependencies:
-      - target: CTFileManager
-      - target: CTImageLoader
+      - target: SLFileManager
+      - target: SLImageLoader
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.akitora.OvRClassification
@@ -80,51 +80,51 @@ targets:
         CODE_SIGNING_REQUIRED: NO
     dependencies: []
 
-  CTFileManager:
+  SLFileManager:
     type: framework
     platform: macOS
     sources:
-      - path: CTFileManager
+      - path: SLFileManager
         excludes:
           - "**/*.md"
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.CTFileManager
-        PRODUCT_NAME: CTFileManager
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.SLFileManager
+        PRODUCT_NAME: SLFileManager
         MACOSX_DEPLOYMENT_TARGET: "15.2"
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGNING_REQUIRED: NO
     dependencies: []
 
-  CTImageLoader:
+  SLImageLoader:
     type: framework
     platform: macOS
     sources:
-      - path: CTImageLoader
+      - path: SLImageLoader
         excludes:
           - "**/*.md"
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.CTImageLoader
-        PRODUCT_NAME: CTImageLoader
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.SLImageLoader
+        PRODUCT_NAME: SLImageLoader
         MACOSX_DEPLOYMENT_TARGET: "15.2"
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGNING_REQUIRED: NO
     dependencies: []
 
-  CTDuplicateChecker:
+  SLDuplicateChecker:
     type: framework
     platform: macOS
     sources:
-      - path: CTDuplicateChecker
+      - path: SLDuplicateChecker
         excludes:
           - "**/*.md"
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.CTDuplicateChecker
-        PRODUCT_NAME: CTDuplicateChecker
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.SLDuplicateChecker
+        PRODUCT_NAME: SLDuplicateChecker
         MACOSX_DEPLOYMENT_TARGET: "15.2"
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGNING_REQUIRED: NO
     dependencies:
-      - target: CTFileManager
+      - target: SLFileManager

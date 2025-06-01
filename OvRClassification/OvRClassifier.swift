@@ -1,8 +1,8 @@
 import CoreGraphics
 import CoreML
-import CTFileManager
-import CTImageLoader
 import Foundation
+import SLFileManager
+import SLImageLoader
 import Vision
 
 private struct ModelContainer: @unchecked Sendable {
@@ -13,8 +13,8 @@ private struct ModelContainer: @unchecked Sendable {
 
 public actor OvRClassifier {
     private var models: [ModelContainer] = []
-    private let fileManager: CTFileManagerProtocol
-    private let imageLoader: CTImageLoaderProtocol
+    private let fileManager: SLFileManagerProtocol
+    private let imageLoader: SLImageLoaderProtocol
 
     private var modelDirectoryURL: URL {
         let currentFileURL = URL(fileURLWithPath: #filePath)
@@ -24,8 +24,8 @@ public actor OvRClassifier {
     }
 
     public init(
-        fileManager: CTFileManagerProtocol,
-        imageLoader: CTImageLoaderProtocol
+        fileManager: SLFileManagerProtocol,
+        imageLoader: SLImageLoaderProtocol
     ) async throws {
         self.fileManager = fileManager
         self.imageLoader = imageLoader

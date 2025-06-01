@@ -1,11 +1,12 @@
 import Foundation
 
-public final class MockCTFileManager: CTFileManagerProtocol {
+public final class MockSLFileManager: SLFileManagerProtocol {
     public var saveImageError: Error?
     /// fileExistsメソッドの戻り値を制御するためのプロパティ
     public var fileExistsResult: Bool = false
     /// 指定されたディレクトリ内の画像ファイルパスのリストを設定するためのプロパティ
     public var mockImageFiles: [String: [String]] = [:]
+    private var mockSavedImages: [String: Data] = [:]
     private let datasetDirectory: URL?
 
     public init(datasetDirectory: URL? = nil) {
@@ -30,7 +31,7 @@ public final class MockCTFileManager: CTFileManagerProtocol {
                 includingPropertiesForKeys: nil
             ).filter { $0.pathExtension == "mlmodelc" }
         } catch {
-            throw CTFileManagerError.fileOperationFailed(error)
+            throw SLFileManagerError.fileOperationFailed(error)
         }
     }
 

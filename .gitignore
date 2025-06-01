@@ -27,4 +27,4 @@ Package.resolved
 Carthage/Build
 
 # Test temporary directories
-CTFileManagerTests_Temp/
+SLFileManagerTests_Temp/

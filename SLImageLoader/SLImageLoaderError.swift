@@ -1,6 +1,6 @@
 import Foundation
 
-public enum ImageLoaderError: Error {
+public enum SLImageLoaderError: Error {
     case downloadFailed
     case sampleImageNotFound
     case fileNotFound

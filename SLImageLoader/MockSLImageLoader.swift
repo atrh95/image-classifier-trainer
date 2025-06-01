@@ -1,6 +1,6 @@
 import Foundation
 
-public final class MockCTImageLoader: CTImageLoaderProtocol {
+public final class MockSLImageLoader: SLImageLoaderProtocol {
     private let sampleImagesDirectory: URL
     public var testImageURL: URL {
         sampleImagesDirectory.appendingPathComponent("MTU1MDA0NA.jpg")
@@ -13,14 +13,14 @@ public final class MockCTImageLoader: CTImageLoaderProtocol {
         // サンプル画像ディレクトリのパスを設定
         let currentFileURL = URL(fileURLWithPath: #filePath)
         sampleImagesDirectory = currentFileURL
-            .deletingLastPathComponent() // CTImageLoader
+            .deletingLastPathComponent() // SLImageLoader
             .appendingPathComponent("SampleImage")
     }
 
     public func downloadImage(from _: URL) async throws -> Data {
         // サンプル画像ディレクトリから画像を読み込む
         guard let imageData = try? Data(contentsOf: testImageURL) else {
-            throw ImageLoaderError.sampleImageNotFound
+            throw SLImageLoaderError.sampleImageNotFound
         }
 
         return imageData
@@ -37,7 +37,7 @@ public final class MockCTImageLoader: CTImageLoaderProtocol {
 
         // デフォルトのサンプル画像データを返す
         guard let imageData = try? Data(contentsOf: testImageURL) else {
-            throw ImageLoaderError.sampleImageNotFound
+            throw SLImageLoaderError.sampleImageNotFound
         }
 
         return imageData
