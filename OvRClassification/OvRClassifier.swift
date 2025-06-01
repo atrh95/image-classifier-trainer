@@ -1,8 +1,8 @@
 import CoreGraphics
 import CoreML
+import Foundation
 import SLFileManager
 import SLImageLoader
-import Foundation
 import Vision
 
 private struct ModelContainer: @unchecked Sendable {

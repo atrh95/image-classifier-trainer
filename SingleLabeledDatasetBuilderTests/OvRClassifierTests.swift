@@ -1,6 +1,6 @@
+import OvRClassification
 import SLFileManager
 import SLImageLoader
-import OvRClassification
 import XCTest
 
 final class OvRClassifierTests: XCTestCase {

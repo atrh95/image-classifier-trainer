@@ -1,9 +1,9 @@
 import CatAPIClient
+import Foundation
+import OvRClassification
 import SLDuplicateChecker
 import SLFileManager
 import SLImageLoader
-import Foundation
-import OvRClassification
 
 private let fetchImagesCount = 10
 private let classificationThreshold: Float = 0.85
