@@ -48,19 +48,19 @@ public actor OvRClassifier {
             imageData: imageData,
             threshold: threshold
         )
-        
+
         // 全ての分類結果を表示
         print("分類結果:")
         let allFeatures = try await classifyImageWithThreshold(
             imageData: imageData,
-            threshold: 0.0  // 閾値を0に設定して全ての結果を取得
+            threshold: 0.0 // 閾値を0に設定して全ての結果を取得
         )
         let sortedFeatures = allFeatures.sorted { $0.label < $1.label }
         for feature in sortedFeatures {
             let checkmark = feature.confidence >= threshold ? "✅ " : ""
             print("\(checkmark)\(feature.label): \(String(format: "%.3f", feature.confidence))")
         }
-        
+
         return features
     }
 
