@@ -27,9 +27,9 @@ public final actor DuplicateChecker: DuplicateCheckerProtocol {
         imageHashes = verifiedHashes.union(unverifiedHashes)
         
         print("✅ 重複チェッカーの初期化が完了しました")
-        print("   確認済みデータセット: \(verifiedHashes.count)件")
-        print("   未確認データセット: \(unverifiedHashes.count)件")
-        print("   合計: \(imageHashes.count)件")
+        print("確認済みデータセット: \(verifiedHashes.count)件")
+        print("未確認データセット: \(unverifiedHashes.count)件")
+        print("合計: \(imageHashes.count)件")
     }
 
     private func loadHashesFromDirectory(isVerified: Bool) async throws -> Set<String> {
@@ -46,7 +46,7 @@ public final actor DuplicateChecker: DuplicateCheckerProtocol {
                 let hash = calculateImageHash(imageData)
                 hashes.insert(hash)
             } catch {
-                print("   ❌ 画像の読み込みに失敗: \(file) - \(error)")
+                print("❌ 画像の読み込みに失敗: \(file) - \(error)")
             }
         }
 
@@ -68,14 +68,14 @@ public final actor DuplicateChecker: DuplicateCheckerProtocol {
         )
 
         if existsInVerified || existsInUnverified {
-            print("   ⚠️ ファイル名の重複を検出したので、保存をスキップ: \(fileName)")
+            print("⚠️ ファイル名の重複を検出したので、保存をスキップ: \(fileName)")
             return false
         }
 
         // 次に、画像コンテンツのハッシュが存在するかチェック
         let hash = calculateImageHash(imageData)
         if imageHashes.contains(hash) {
-            print("   ⚠️ 画像内容の重複を検出したので、保存をスキップ: \(fileName)")
+            print("⚠️ 画像内容の重複を検出したので、保存をスキップ: \(fileName)")
             return false
         }
 

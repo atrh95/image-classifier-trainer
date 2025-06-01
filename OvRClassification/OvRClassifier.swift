@@ -103,11 +103,11 @@ public actor OvRClassifier {
         }
 
         // 分類結果を表示
-        print("   分類結果:")
+        print("分類結果:")
         let sortedFeatures = detectedFeatures.sorted { $0.label < $1.label }
         for feature in sortedFeatures where feature.label != "rest" {
             let checkmark = feature.confidence >= threshold ? "✅" : "  "
-            print("     \(checkmark) \(feature.label): \(String(format: "%.3f", feature.confidence))")
+            print("\(checkmark) \(feature.label): \(String(format: "%.3f", feature.confidence))")
         }
         print("----------------------------------------")
 
@@ -120,7 +120,7 @@ public actor OvRClassifier {
               let feature = nonRestThresholdedFeatures.first
         else {
             if !nonRestThresholdedFeatures.isEmpty {
-                print("⚠️ 閾値を超えた特徴が複数あるため保存をスキップ:")
+                print("⚠️ 閾値を超えた特徴が複数あるため、保存をスキップ")
                 for feature in nonRestThresholdedFeatures {
                     print("     - \(feature.label): \(String(format: "%.3f", feature.confidence))")
                 }
