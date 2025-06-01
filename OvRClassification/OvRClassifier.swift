@@ -39,41 +39,45 @@ public actor OvRClassifier {
         models = loadedModels
     }
 
-    /// URLから画像をダウンロードし、分類を行い、閾値を超えた場合は保存する
-    public func classifyImageFromURL(
-        from url: URL,
-        threshold: Float
-    ) async throws -> DetectedFeature? {
-        // 画像データのダウンロード
-        let data = try await imageLoader.downloadImage(from: url)
-
-        // 全てのモデルで画像を分類し、閾値を超えた特徴が1つだけの場合のみ結果を返す
-        return try await classifyImage(data: data, threshold: threshold)
-    }
-
-    /// ダウンロード済みの画像データを分類し、閾値を超えた場合は保存する
-    public func classifyImage(
+    /// 画像データを分類し、閾値を超えた特徴のリストを返す
+    public func getThresholdedFeatures(
         data imageData: Data,
         threshold: Float
-    ) async throws -> DetectedFeature? {
-        // 全てのモデルで画像を分類し、閾値を超えた特徴が1つだけの場合のみ結果を返す
-        if let feature = try await classifySingleImage(imageData, probabilityThreshold: threshold) {
-            return feature
+    ) async throws -> [(label: String, confidence: Float)] {
+        let features = try await classifyImageWithThreshold(
+            imageData: imageData,
+            threshold: threshold
+        )
+        
+        // 全ての分類結果を表示
+        print("分類結果:")
+        let allFeatures = try await classifyImageWithThreshold(
+            imageData: imageData,
+            threshold: 0.0  // 閾値を0に設定して全ての結果を取得
+        )
+        let sortedFeatures = allFeatures.sorted { $0.label < $1.label }
+        for feature in sortedFeatures {
+            let checkmark = feature.confidence >= threshold ? "✅ " : ""
+            print("\(checkmark)\(feature.label): \(String(format: "%.3f", feature.confidence))")
         }
-        return nil
+        
+        return features
     }
 
-    private func classifySingleImage(
-        _ imageData: Data,
-        probabilityThreshold threshold: Float
-    ) async throws -> DetectedFeature? {
-        var detectedFeatures: [(label: String, confidence: Float)] = []
+    /// 画像データを分類し、閾値を超えた特徴のリストを返す（内部メソッド）
+    private func classifyImageWithThreshold(
+        imageData: Data,
+        threshold: Float
+    ) async throws -> [(label: String, confidence: Float)] {
+        var thresholdedFeatures: [(label: String, confidence: Float)] = []
+        var allFeatures: [(label: String, confidence: Float)] = []
 
         try await withThrowingTaskGroup(
             of: (modelId: String, observations: [(featureName: String, confidence: Float)]?)
                 .self
         ) { group in
-            for container in self.models {
+            // 全てのモデルを並列に実行
+            for container in models {
                 group.addTask {
                     do {
                         let handler = VNImageRequestHandler(data: imageData, options: [:])
@@ -92,47 +96,19 @@ public actor OvRClassifier {
                 }
             }
 
+            // 全ての結果を収集
             for try await result in group {
                 guard let mappedObservations = result.observations else { continue }
-
-                // 閾値を超えた特徴を収集（Restを含む）
-                for observation in mappedObservations {
-                    detectedFeatures.append((label: observation.featureName, confidence: observation.confidence))
+                for observation in mappedObservations where observation.featureName != "rest" {
+                    allFeatures.append((label: observation.featureName, confidence: observation.confidence))
+                    if observation.confidence >= threshold {
+                        thresholdedFeatures.append((label: observation.featureName, confidence: observation.confidence))
+                    }
                 }
             }
         }
 
-        // 分類結果を表示
-        print("分類結果:")
-        let sortedFeatures = detectedFeatures.sorted { $0.label < $1.label }
-        for feature in sortedFeatures where feature.label != "rest" {
-            let checkmark = feature.confidence >= threshold ? "✅" : "  "
-            print("\(checkmark) \(feature.label): \(String(format: "%.3f", feature.confidence))")
-        }
-        print("----------------------------------------")
-
-        // 閾値を超えた特徴をフィルタリング
-        let thresholdedFeatures = detectedFeatures.filter { $0.confidence >= threshold }
-        let nonRestThresholdedFeatures = thresholdedFeatures.filter { $0.label != "rest" }
-
-        // 閾値を超えた特徴が1つだけの場合のみ結果を返す
-        guard nonRestThresholdedFeatures.count == 1,
-              let feature = nonRestThresholdedFeatures.first
-        else {
-            if !nonRestThresholdedFeatures.isEmpty {
-                print("⚠️ 閾値を超えた特徴が複数あるため、保存をスキップ")
-                for feature in nonRestThresholdedFeatures {
-                    print("     - \(feature.label): \(String(format: "%.3f", feature.confidence))")
-                }
-            }
-            return nil
-        }
-
-        return DetectedFeature(
-            label: feature.label,
-            confidence: feature.confidence,
-            imageData: imageData
-        )
+        return thresholdedFeatures
     }
 
     /// モデルファイルからVisionモデルとリクエストを並列にロード

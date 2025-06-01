@@ -15,7 +15,7 @@ public final actor DuplicateChecker: DuplicateCheckerProtocol {
 
     public func initializeHashes() async throws {
         print("🔄 重複チェッカーの初期化を開始...")
-        
+
         // 既存のハッシュをクリア
         imageHashes.removeAll()
 
@@ -25,7 +25,7 @@ public final actor DuplicateChecker: DuplicateCheckerProtocol {
 
         // すべてのハッシュを結合
         imageHashes = verifiedHashes.union(unverifiedHashes)
-        
+
         print("✅ 重複チェッカーの初期化が完了しました")
         print("確認済みデータセット: \(verifiedHashes.count)件")
         print("未確認データセット: \(unverifiedHashes.count)件")

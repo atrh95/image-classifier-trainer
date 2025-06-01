@@ -65,7 +65,7 @@ public actor CTFileManager: CTFileManagerProtocol {
             let directoryURL = datasetDirectory
                 .deletingLastPathComponent() // Dataset
                 .appendingPathComponent(directory)
-            
+
             // 再帰的にサブディレクトリを検索
             guard let enumerator = fileManager.enumerator(
                 at: directoryURL,
@@ -77,12 +77,12 @@ public actor CTFileManager: CTFileManagerProtocol {
             }
 
             var imageFiles: [String] = []
-            
+
             // 各エントリを処理
             for case let fileURL as URL in enumerator {
                 // ファイルの属性を取得
                 let resourceValues = try fileURL.resourceValues(forKeys: [.isRegularFileKey])
-                
+
                 // 通常ファイルの場合のみ処理
                 if resourceValues.isRegularFile == true {
                     let fileExtension = fileURL.pathExtension.lowercased()
@@ -91,7 +91,7 @@ public actor CTFileManager: CTFileManagerProtocol {
                     }
                 }
             }
-            
+
             return imageFiles
         } catch {
             print("   ❌ ディレクトリの検索に失敗: \(error)")
@@ -99,4 +99,3 @@ public actor CTFileManager: CTFileManagerProtocol {
         }
     }
 }
-
