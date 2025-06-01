@@ -72,7 +72,7 @@ public final actor DuplicateChecker: DuplicateCheckerProtocol {
         // 次に、画像コンテンツのハッシュが存在するかチェック
         let hash = calculateImageHash(imageData)
         if imageHashes.contains(hash) {
-            print("⚠️ 画像内容の重複を検出したので、保存をスキップ: \(fileName)")
+            print("⚠️ 画像内容の重複を検出したため、保存をスキップ: \(fileName)")
             return false
         }
 

@@ -5,7 +5,7 @@ import SLDuplicateChecker
 import SLFileManager
 import SLImageLoader
 
-private let fetchImagesCount = 50000
+private let fetchImagesCount = 40000
 private let classificationThreshold: Float = 0.85
 private let batchSize = 200
 private let maxRetriesWhenFailedToDownload = 3
@@ -279,9 +279,10 @@ private func printBatchProgress(
     totalProcessingTime: TimeInterval,
     remainingBatches: Int
 ) {
-    print("✅ バッチ \(batchIndex + 1)/\(totalBatches) の処理が完了しました")
+    
+    print("\n✅ バッチ \(batchIndex + 1)/\(totalBatches) の処理が完了しました")
     print("このバッチの処理時間: \(String(format: "%.1f", batchProcessingTime))秒")
-
+    
     // 最後のバッチ以外の場合のみ時刻予想を表示
     if remainingBatches > 0 {
         // 平均バッチ処理時間を計算
@@ -300,6 +301,12 @@ private func printBatchProgress(
         let seconds = Int(estimatedRemainingTime) % 60
         let remainingTimeString = String(format: "%d時間%d分%d秒", hours, minutes, seconds)
 
-        print("予測終了時刻: \(estimatedEndTimeString) (残り\(remainingTimeString))")
+        print("⏰ 予測終了時刻: \(estimatedEndTimeString) (残り\(remainingTimeString))")
     }
+    
+    // これまでの累計統計を表示
+    print("\n📊 これまでの累計統計")
+    print("URL取得数: \(stats.totalFetchedURLs)件")
+    print("処理した画像数: \(stats.processedAfterValidation)件")
+    print("保存した画像数: \(stats.labelCounts.values.reduce(0, +))枚")
 }
