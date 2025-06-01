@@ -5,9 +5,9 @@ import SLDuplicateChecker
 import SLFileManager
 import SLImageLoader
 
-private let fetchImagesCount = 40000
+private let fetchImagesCount = 20
 private let classificationThreshold: Float = 0.85
-private let batchSize = 200
+private let batchSize = 10
 private let maxRetriesWhenFailedToDownload = 3
 
 let semaphore = DispatchSemaphore(value: 0)
@@ -123,7 +123,7 @@ private actor ImageClassifierTrainer {
                 totalBatches: totalBatches,
                 batchProcessingTime: batchProcessingTime,
                 totalProcessingTime: stats.totalProcessingTime,
-                remainingBatches: totalBatches - (batchIndex + 1)
+                stats: stats
             )
         }
 
@@ -246,11 +246,6 @@ private actor ImageClassifierTrainer {
     }
 
     private func printProcessingResults() {
-        print("\n🎉 自動分類が完了しました！")
-        for (label, count) in stats.labelCounts.sorted(by: { $0.key < $1.key }) {
-            print("\(label): \(count)枚")
-        }
-
         print("\n🎉 処理が完了しました")
         print("処理時間: \(String(format: "%.1f", stats.totalProcessingTime))秒")
         print("URL取得数: \(stats.totalFetchedURLs)件")
@@ -277,13 +272,13 @@ private func printBatchProgress(
     totalBatches: Int,
     batchProcessingTime: TimeInterval,
     totalProcessingTime: TimeInterval,
-    remainingBatches: Int
+    stats: ProcessingStats
 ) {
-    
     print("\n✅ バッチ \(batchIndex + 1)/\(totalBatches) の処理が完了しました")
     print("このバッチの処理時間: \(String(format: "%.1f", batchProcessingTime))秒")
-    
+
     // 最後のバッチ以外の場合のみ時刻予想を表示
+    let remainingBatches = totalBatches - (batchIndex + 1)
     if remainingBatches > 0 {
         // 平均バッチ処理時間を計算
         let averageBatchTime = totalProcessingTime / Double(batchIndex + 1)
@@ -303,10 +298,17 @@ private func printBatchProgress(
 
         print("⏰ 予測終了時刻: \(estimatedEndTimeString) (残り\(remainingTimeString))")
     }
-    
+
     // これまでの累計統計を表示
     print("\n📊 これまでの累計統計")
     print("URL取得数: \(stats.totalFetchedURLs)件")
     print("処理した画像数: \(stats.processedAfterValidation)件")
     print("保存した画像数: \(stats.labelCounts.values.reduce(0, +))枚")
+    
+    // ラベルごとの集計を表示
+    if !stats.labelCounts.isEmpty {
+        for (label, count) in stats.labelCounts.sorted(by: { $0.key < $1.key }) {
+            print("- \(label): \(count)枚")
+        }
+    }
 }
