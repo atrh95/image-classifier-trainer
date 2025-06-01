@@ -60,22 +60,41 @@ public actor CTFileManager: CTFileManagerProtocol {
     /// 指定されたディレクトリ内のすべての画像ファイルのパスを取得
     public func getAllImageFiles(in directory: String) async throws -> [String] {
         do {
-            let directoryURL = datasetDirectory.appendingPathComponent(directory)
-            let enumerator = fileManager.enumerator(
+            // directoryには既にDataset/VerifiedやDataset/Unverifiedが含まれているので、
+            // datasetDirectoryの親ディレクトリから相対パスを構築
+            let directoryURL = datasetDirectory
+                .deletingLastPathComponent() // Dataset
+                .appendingPathComponent(directory)
+
+            // 再帰的にサブディレクトリを検索
+            guard let enumerator = fileManager.enumerator(
                 at: directoryURL,
                 includingPropertiesForKeys: [.isRegularFileKey],
                 options: [.skipsHiddenFiles]
-            )
+            ) else {
+                print("   ❌ ディレクトリの列挙に失敗")
+                return []
+            }
 
             var imageFiles: [String] = []
-            while let fileURL = enumerator?.nextObject() as? URL {
-                let fileExtension = fileURL.pathExtension.lowercased()
-                if ["jpg", "jpeg", "png"].contains(fileExtension) {
-                    imageFiles.append(fileURL.path)
+
+            // 各エントリを処理
+            for case let fileURL as URL in enumerator {
+                // ファイルの属性を取得
+                let resourceValues = try fileURL.resourceValues(forKeys: [.isRegularFileKey])
+
+                // 通常ファイルの場合のみ処理
+                if resourceValues.isRegularFile == true {
+                    let fileExtension = fileURL.pathExtension.lowercased()
+                    if ["jpg", "jpeg", "png"].contains(fileExtension) {
+                        imageFiles.append(fileURL.path)
+                    }
                 }
             }
+
             return imageFiles
         } catch {
+            print("   ❌ ディレクトリの検索に失敗: \(error)")
             throw CTFileManagerError.fileOperationFailed(error)
         }
     }

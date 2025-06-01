@@ -14,6 +14,8 @@ public final actor DuplicateChecker: DuplicateCheckerProtocol {
     }
 
     public func initializeHashes() async throws {
+        print("🔄 重複チェッカーの初期化を開始...")
+
         // 既存のハッシュをクリア
         imageHashes.removeAll()
 
@@ -23,11 +25,16 @@ public final actor DuplicateChecker: DuplicateCheckerProtocol {
 
         // すべてのハッシュを結合
         imageHashes = verifiedHashes.union(unverifiedHashes)
+
+        print("✅ 重複チェッカーの初期化が完了しました")
+        print("確認済みデータセット: \(verifiedHashes.count)件")
+        print("未確認データセット: \(unverifiedHashes.count)件")
+        print("合計: \(imageHashes.count)件")
     }
 
     private func loadHashesFromDirectory(isVerified: Bool) async throws -> Set<String> {
         var hashes = Set<String>()
-        let directory = isVerified ? "Verified" : "Unverified"
+        let directory = isVerified ? "Dataset/Verified" : "Dataset/Unverified"
 
         // ディレクトリとそのサブディレクトリ内のすべての画像ファイルを取得
         let files = try await fileManager.getAllImageFiles(in: directory)
@@ -35,12 +42,11 @@ public final actor DuplicateChecker: DuplicateCheckerProtocol {
         for file in files {
             let fileURL = URL(fileURLWithPath: file)
             do {
-                if let imageData = try await imageLoader.loadLocalImage(from: fileURL) {
-                    let hash = calculateImageHash(imageData)
-                    hashes.insert(hash)
-                }
+                let imageData = try await imageLoader.loadLocalImage(from: fileURL)
+                let hash = calculateImageHash(imageData)
+                hashes.insert(hash)
             } catch {
-                print("Failed to load image at \(file): \(error)")
+                print("❌ 画像の読み込みに失敗: \(file) - \(error)")
             }
         }
 
@@ -62,12 +68,14 @@ public final actor DuplicateChecker: DuplicateCheckerProtocol {
         )
 
         if existsInVerified || existsInUnverified {
+            print("⚠️ ファイル名の重複を検出したので、保存をスキップ: \(fileName)")
             return false
         }
 
         // 次に、画像コンテンツのハッシュが存在するかチェック
         let hash = calculateImageHash(imageData)
         if imageHashes.contains(hash) {
+            print("⚠️ 画像内容の重複を検出したので、保存をスキップ: \(fileName)")
             return false
         }
 

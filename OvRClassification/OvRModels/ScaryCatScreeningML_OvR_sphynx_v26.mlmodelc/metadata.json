@@ -1,6 +1,6 @@
 [
   {
-    "shortDescription" : "human_hands_detected: 197枚\nRest: 200枚\n訓練正解率: 100.0%\n検証正解率: 100.0%\n再現率: 100.0%\n適合率: 100.0%\nF1スコア: 1.000\nデータ拡張: なし\n特徴抽出器: ScenePrint",
+    "shortDescription" : "sphynx: 146枚\nRest: 148枚\n訓練正解率: 100.0%\n検証正解率: 100.0%\n再現率: 100.0%\n適合率: 100.0%\nF1スコア: 1.000\nデータ拡張: なし\n特徴抽出器: ScenePrint",
     "metadataOutputVersion" : "3.0",
     "outputSchema" : [
       {
@@ -19,7 +19,7 @@
         "shortDescription" : ""
       }
     ],
-    "version" : "v24",
+    "version" : "v26",
     "modelParameters" : [
 
     ],
@@ -63,10 +63,10 @@
       }
     ],
     "classLabels" : [
-      "human_hands_detected",
-      "rest"
+      "rest",
+      "sphynx"
     ],
-    "generatedClassName" : "ScaryCatScreeningML_OvR_human_hands_detected_v24",
+    "generatedClassName" : "ScaryCatScreeningML_OvR_sphynx_v26",
     "userDefinedMetadata" : {
       "com.apple.createml.version" : "15.5.0"
     },
