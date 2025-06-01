@@ -5,9 +5,9 @@ import SLDuplicateChecker
 import SLFileManager
 import SLImageLoader
 
-private let fetchImagesCount = 10
+private let fetchImagesCount = 50000
 private let classificationThreshold: Float = 0.85
-private let batchSize = 10
+private let batchSize = 200
 private let maxRetriesWhenFailedToDownload = 3
 
 let semaphore = DispatchSemaphore(value: 0)
@@ -133,10 +133,11 @@ private actor ImageClassifierTrainer {
     private func fetchImageURLs(currentBatchSize: Int) async throws -> [CatImageURLModel] {
         var urlModels: [CatImageURLModel] = []
         var retryCount = 0
-        while urlModels.isEmpty, retryCount < maxRetriesWhenFailedToDownload {
+        while retryCount < maxRetriesWhenFailedToDownload {
             do {
                 urlModels = try await client.fetchImageURLs(requestedCount: currentBatchSize, batchSize: 10)
                 stats.totalFetchedURLs += urlModels.count
+                return urlModels
             } catch {
                 retryCount += 1
                 if retryCount < maxRetriesWhenFailedToDownload {

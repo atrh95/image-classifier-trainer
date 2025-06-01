@@ -33,8 +33,8 @@ final class SLDuplicateCheckerTests: XCTestCase {
         let verifiedFile = "/path/to/verified.jpg"
         let unverifiedFile = "/path/to/unverified.jpg"
         mockFileManager.mockImageFiles = [
-            "Dataset/Verified": [verifiedFile],
-            "Dataset/Unverified": [unverifiedFile],
+            "Verified": [verifiedFile],
+            "Unverified": [unverifiedFile],
         ]
 
         // モックの画像データを設定

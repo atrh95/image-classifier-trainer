@@ -11,9 +11,8 @@ public actor SLFileManager: SLFileManagerProtocol {
             let currentFileURL = URL(fileURLWithPath: #file)
             self.datasetDirectory = currentFileURL
                 .deletingLastPathComponent() // SLFileManager
-                .deletingLastPathComponent() // SLFileManager
-                .deletingLastPathComponent() // Sources
                 .deletingLastPathComponent() // Project root
+                .appendingPathComponent("Dataset")
         }
     }
 
@@ -58,17 +57,13 @@ public actor SLFileManager: SLFileManagerProtocol {
     }
 
     /// 指定されたディレクトリ内のすべての画像ファイルのパスを取得
-    public func getAllImageFiles(in directory: String) async throws -> [String] {
+    public func getAllImageFiles(isVerified: Bool) async throws -> [String] {
         do {
-            // directoryには既にDataset/VerifiedやDataset/Unverifiedが含まれているので、
-            // datasetDirectoryの親ディレクトリから相対パスを構築
-            let directoryURL = datasetDirectory
-                .deletingLastPathComponent() // Dataset
-                .appendingPathComponent(directory)
+            let baseDirectory = isVerified ? verifiedDirectory : unverifiedDirectory
 
             // 再帰的にサブディレクトリを検索
             guard let enumerator = fileManager.enumerator(
-                at: directoryURL,
+                at: baseDirectory,
                 includingPropertiesForKeys: [.isRegularFileKey],
                 options: [.skipsHiddenFiles]
             ) else {

@@ -36,7 +36,7 @@ public final class MockSLFileManager: SLFileManagerProtocol {
     }
 
     /// 指定されたディレクトリ内のすべての画像ファイルのパスを取得
-    public func getAllImageFiles(in directory: String) async throws -> [String] {
-        mockImageFiles[directory] ?? []
+    public func getAllImageFiles(isVerified: Bool) async throws -> [String] {
+        mockImageFiles[isVerified ? "Verified" : "Unverified"] ?? []
     }
 }
