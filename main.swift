@@ -5,9 +5,9 @@ import SLDuplicateChecker
 import SLFileManager
 import SLImageLoader
 
-private let fetchImagesCount = 20
+private let fetchImagesCount = 5000
 private let classificationThreshold: Float = 0.85
-private let batchSize = 10
+private let batchSize = 200
 private let maxRetriesWhenFailedToDownload = 3
 
 let semaphore = DispatchSemaphore(value: 0)
@@ -199,6 +199,7 @@ private actor ImageClassifierTrainer {
 
         // 無効な形式を弾いた後に処理した枚数をカウント
         stats.processedAfterValidation += 1
+        print("\(stats.processedAfterValidation)/\(fetchImagesCount)枚処理完了")
 
         // 分類を実行
         do {
