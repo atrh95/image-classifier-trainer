@@ -1,7 +1,7 @@
 import CatAPIClient
-import CTDuplicateChecker
-import CTFileManager
-import CTImageLoader
+import SLDuplicateChecker
+import SLFileManager
+import SLImageLoader
 import Foundation
 import OvRClassification
 
@@ -14,8 +14,8 @@ let semaphore = DispatchSemaphore(value: 0)
 
 Task {
     do {
-        let fileManager = CTFileManager()
-        let imageLoader = CTImageLoader()
+        let fileManager = SLFileManager()
+        let imageLoader = SLImageLoader()
         let classifier = try await OvRClassifier(
             fileManager: fileManager,
             imageLoader: imageLoader
@@ -52,14 +52,14 @@ private struct ProcessingStats {
 
 private actor ImageClassifierTrainer {
     private let client: CatAPIClientProtocol
-    private let fileManager: CTFileManagerProtocol
-    private let imageLoader: CTImageLoaderProtocol
+    private let fileManager: SLFileManagerProtocol
+    private let imageLoader: SLImageLoaderProtocol
     private var stats: ProcessingStats
 
     init(
         client: CatAPIClientProtocol = CatAPIClient(),
-        fileManager: CTFileManagerProtocol = CTFileManager(),
-        imageLoader: CTImageLoaderProtocol = CTImageLoader()
+        fileManager: SLFileManagerProtocol = SLFileManager(),
+        imageLoader: SLImageLoaderProtocol = SLImageLoader()
     ) {
         self.client = client
         self.fileManager = fileManager

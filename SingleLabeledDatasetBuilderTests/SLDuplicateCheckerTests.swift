@@ -1,18 +1,18 @@
-import CTDuplicateChecker
-import CTFileManager
-import CTImageLoader
+import SLDuplicateChecker
+import SLFileManager
+import SLImageLoader
 import XCTest
 
-final class CTDuplicateCheckerTests: XCTestCase {
+final class SLDuplicateCheckerTests: XCTestCase {
     var sut: DuplicateChecker!
-    var mockFileManager: MockCTFileManager!
-    var mockImageLoader: MockCTImageLoader!
+    var mockFileManager: MockSLFileManager!
+    var mockImageLoader: MockSLImageLoader!
     var sampleImageData: Data!
 
     override func setUp() async throws {
         try await super.setUp()
-        mockFileManager = MockCTFileManager()
-        mockImageLoader = MockCTImageLoader()
+        mockFileManager = MockSLFileManager()
+        mockImageLoader = MockSLImageLoader()
         sut = DuplicateChecker(fileManager: mockFileManager, imageLoader: mockImageLoader)
 
         // モックのdownloadImageメソッドからサンプル画像データを取得

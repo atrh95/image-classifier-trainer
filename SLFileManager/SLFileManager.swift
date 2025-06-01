@@ -1,20 +1,20 @@
 import Foundation
 
-public actor CTFileManager: CTFileManagerProtocol {
+public actor SLFileManager: SLFileManagerProtocol {
     private let fileManager = FileManager.default
     private let datasetDirectory: URL
 
     public init(datasetDirectory: URL? = nil) {
         if let datasetDirectory {
             self.datasetDirectory = datasetDirectory
-            return
+        } else {
+            let currentFileURL = URL(fileURLWithPath: #file)
+            self.datasetDirectory = currentFileURL
+                .deletingLastPathComponent() // SLFileManager
+                .deletingLastPathComponent() // SLFileManager
+                .deletingLastPathComponent() // Sources
+                .deletingLastPathComponent() // Project root
         }
-
-        let currentFileURL = URL(fileURLWithPath: #filePath)
-        self.datasetDirectory = currentFileURL
-            .deletingLastPathComponent() // CTFileManager
-            .deletingLastPathComponent() // root
-            .appendingPathComponent("Dataset")
     }
 
     private var unverifiedDirectory: URL {
@@ -34,7 +34,7 @@ public actor CTFileManager: CTFileManagerProtocol {
             let fileURL = labelDirectory.appendingPathComponent(fileName)
             try imageData.write(to: fileURL)
         } catch {
-            throw CTFileManagerError.fileOperationFailed(error)
+            throw SLFileManagerError.fileOperationFailed(error)
         }
     }
 
@@ -53,7 +53,7 @@ public actor CTFileManager: CTFileManagerProtocol {
                 includingPropertiesForKeys: nil
             ).filter { $0.pathExtension == "mlmodelc" }
         } catch {
-            throw CTFileManagerError.fileOperationFailed(error)
+            throw SLFileManagerError.fileOperationFailed(error)
         }
     }
 
@@ -95,7 +95,7 @@ public actor CTFileManager: CTFileManagerProtocol {
             return imageFiles
         } catch {
             print("   ❌ ディレクトリの検索に失敗: \(error)")
-            throw CTFileManagerError.fileOperationFailed(error)
+            throw SLFileManagerError.fileOperationFailed(error)
         }
     }
 }

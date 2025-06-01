@@ -1,6 +1,6 @@
 import Foundation
 
-public actor CTImageLoader: CTImageLoaderProtocol {
+public actor SLImageLoader: SLImageLoaderProtocol {
     public init() {}
 
     /// URLから画像をダウンロードしてデータを返す
@@ -10,7 +10,7 @@ public actor CTImageLoader: CTImageLoaderProtocol {
         guard let httpResponse = response as? HTTPURLResponse,
               (200 ... 299).contains(httpResponse.statusCode)
         else {
-            throw ImageLoaderError.downloadFailed
+            throw SLImageLoaderError.downloadFailed
         }
 
         return data
@@ -19,12 +19,12 @@ public actor CTImageLoader: CTImageLoaderProtocol {
     /// ローカルの画像ファイルからデータを読み込む
     public func loadLocalImage(from url: URL) async throws -> Data {
         guard FileManager.default.fileExists(atPath: url.path) else {
-            throw ImageLoaderError.fileNotFound
+            throw SLImageLoaderError.fileNotFound
         }
 
         let fileExtension = url.pathExtension.lowercased()
         guard ["jpg", "jpeg", "png"].contains(fileExtension) else {
-            throw ImageLoaderError.unsupportedFileType
+            throw SLImageLoaderError.unsupportedFileType
         }
 
         return try Data(contentsOf: url)

@@ -1,14 +1,14 @@
 import CryptoKit
-import CTFileManager
-import CTImageLoader
 import Foundation
+import SLFileManager
+import SLImageLoader
 
 public final actor DuplicateChecker: DuplicateCheckerProtocol {
     private var imageHashes: Set<String> = []
-    private let fileManager: CTFileManagerProtocol
-    private let imageLoader: CTImageLoaderProtocol
+    private let fileManager: SLFileManagerProtocol
+    private let imageLoader: SLImageLoaderProtocol
 
-    public init(fileManager: CTFileManagerProtocol, imageLoader: CTImageLoaderProtocol) {
+    public init(fileManager: SLFileManagerProtocol, imageLoader: SLImageLoaderProtocol) {
         self.fileManager = fileManager
         self.imageLoader = imageLoader
     }

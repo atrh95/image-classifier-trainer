@@ -1,20 +1,19 @@
-import CTFileManager
+import SLFileManager
 import XCTest
 
-final class CTFileManagerTests: XCTestCase {
-    var fileManager: CTFileManager!
+final class SLFileManagerTests: XCTestCase {
+    var fileManager: SLFileManager!
 
     private var tempDirectory: URL {
         let testDirectory = Bundle(for: type(of: self)).bundleURL
-            .deletingLastPathComponent()
-            .appendingPathComponent("CTFileManagerTests_Temp")
+            .appendingPathComponent("SLFileManagerTests_Temp")
         return testDirectory
     }
 
     override func setUp() async throws {
         try await super.setUp()
         try FileManager.default.createDirectory(at: tempDirectory, withIntermediateDirectories: true)
-        fileManager = CTFileManager(datasetDirectory: tempDirectory)
+        fileManager = SLFileManager(datasetDirectory: tempDirectory)
     }
 
     override func tearDown() async throws {
@@ -76,7 +75,7 @@ final class CTFileManagerTests: XCTestCase {
             try await fileManager.saveImage(imageData, fileName: fileName, label: label)
             XCTFail("Expected saveImage to throw an error due to insufficient permissions")
         } catch {
-            XCTAssertTrue(error is CTFileManagerError)
+            XCTAssertTrue(error is SLFileManagerError)
         }
 
         try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: tempDirectory.path)
