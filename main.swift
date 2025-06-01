@@ -5,9 +5,9 @@ import CTImageLoader
 import Foundation
 import OvRClassification
 
-private let defaultFetchImageCount = 1000
+private let fetchImagesCount = 10
 private let defaultClassificationThreshold: Float = 0.85
-private let defaultBatchSize = 200
+private let defaultBatchSize = 10
 private let defaultMaxRetries = 3
 
 private struct ProcessingStats {
@@ -38,7 +38,10 @@ Task {
             fileManager: fileManager,
             imageLoader: imageLoader
         )
-        let duplicateChecker = DuplicateChecker(fileManager: fileManager)
+        let duplicateChecker = DuplicateChecker(
+            fileManager: fileManager,
+            imageLoader: imageLoader
+        )
         
         try await runMainProcess(
             client: client,
@@ -76,15 +79,15 @@ public func runMainProcess(
     try await duplicateChecker.initializeHashes()
     
     var stats = ProcessingStats()
-    let totalBatches = (defaultFetchImageCount + defaultBatchSize - 1) / defaultBatchSize
+    let totalBatches = (fetchImagesCount + defaultBatchSize - 1) / defaultBatchSize
     
     print("🚀 画像URLの取得を開始...")
-    print("   \(defaultFetchImageCount)件の画像を\(defaultBatchSize)件ずつ\(totalBatches)バッチに分割して処理します")
+    print("   \(fetchImagesCount)件の画像を\(defaultBatchSize)件ずつ\(totalBatches)バッチに分割して処理します")
     
     for batchIndex in 0 ..< totalBatches {
         let batchStartTime = Date()
         let startIndex = batchIndex * defaultBatchSize
-        let endIndex = min(startIndex + defaultBatchSize, defaultFetchImageCount)
+        let endIndex = min(startIndex + defaultBatchSize, fetchImagesCount)
         let currentBatchSize = endIndex - startIndex
         
         print("\n📦 バッチ \(batchIndex + 1)/\(totalBatches) の処理を開始...")
@@ -121,7 +124,7 @@ public func runMainProcess(
             duplicateChecker: duplicateChecker,
             fileManager: fileManager,
             stats: stats,
-            totalImages: defaultFetchImageCount
+            totalImages: fetchImagesCount
         )
         
         for model in urlModels {
