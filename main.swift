@@ -5,7 +5,7 @@ import CTImageLoader
 import Foundation
 import OvRClassification
 
-private let fetchImagesCount = 10
+private let fetchImagesCount = 100
 private let defaultClassificationThreshold: Float = 0.85
 private let defaultBatchSize = 10
 private let defaultMaxRetries = 3
@@ -214,8 +214,6 @@ private func processImage(
                 await processor.duplicateChecker.addHash(imageData: feature.imageData)
                 // 最終的な集計のためにカウント
                 processor.stats.labelCounts[feature.label, default: 0] += 1
-            } else {
-                print("   ⚠️ 重複のため保存をスキップ: \(url.lastPathComponent) (\(feature.label))")
             }
         }
     } catch {
