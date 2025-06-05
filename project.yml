@@ -1,6 +1,6 @@
 # mint run xcodegen generate
 
-name: SingleLabeledDatasetBuilder
+name: LabeledDatasetCurator
 options:
   bundleIdPrefix: com.akitora
   deploymentTarget:
@@ -9,7 +9,7 @@ options:
   generateEmptyDirectories: true
 
 targets:
-  SingleLabeledDatasetBuilder:
+  LabeledDatasetCurator:
     type: tool
     platform: macOS
     sources:
@@ -22,16 +22,16 @@ targets:
       - target: SLDuplicateChecker
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.SingleLabeledDatasetBuilder
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.LabeledDatasetCurator
         MACOSX_DEPLOYMENT_TARGET: "15.2"
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGNING_REQUIRED: NO
 
-  SingleLabeledDatasetBuilderTests:
+  LabeledDatasetCuratorTests:
     type: bundle.unit-test
     platform: macOS
     sources:
-      - path: SingleLabeledDatasetBuilderTests
+      - path: LabeledDatasetCuratorTests
     dependencies:
       - target: OvRClassification
       - target: CatAPIClient
@@ -40,7 +40,7 @@ targets:
       - target: SLDuplicateChecker
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.SingleLabeledDatasetBuilderTests
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.LabeledDatasetCuratorTests
         MACOSX_DEPLOYMENT_TARGET: "15.2"
         GENERATE_INFOPLIST_FILE: true
         CODE_SIGNING_ALLOWED: NO

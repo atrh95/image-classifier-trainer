@@ -34,10 +34,7 @@ public final actor DuplicateChecker: DuplicateCheckerProtocol {
 
     private func loadHashesFromDirectory(isVerified: Bool) async throws -> Set<String> {
         var hashes = Set<String>()
-        let directory = isVerified ? "Dataset/Verified" : "Dataset/Unverified"
-
-        // ディレクトリとそのサブディレクトリ内のすべての画像ファイルを取得
-        let files = try await fileManager.getAllImageFiles(in: directory)
+        let files = try await fileManager.getAllImageFiles(isVerified: isVerified)
 
         for file in files {
             let fileURL = URL(fileURLWithPath: file)
@@ -75,7 +72,7 @@ public final actor DuplicateChecker: DuplicateCheckerProtocol {
         // 次に、画像コンテンツのハッシュが存在するかチェック
         let hash = calculateImageHash(imageData)
         if imageHashes.contains(hash) {
-            print("⚠️ 画像内容の重複を検出したので、保存をスキップ: \(fileName)")
+            print("⚠️ 画像内容の重複を検出したため、保存をスキップ: \(fileName)")
             return false
         }
 
