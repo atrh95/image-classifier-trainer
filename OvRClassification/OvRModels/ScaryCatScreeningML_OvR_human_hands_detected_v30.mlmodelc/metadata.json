@@ -1,6 +1,6 @@
 [
   {
-    "shortDescription" : "human_hands_detected: 266枚\nrest: 268枚\n最大反復回数: 11回\n訓練正解率: 100.0%\n検証正解率: 100.0%\n再現率: 100.0%\n適合率: 100.0%\nF1スコア: 1.000\nデータ拡張: ImageAugmentationOptions(rawValue: 18)\n特徴抽出器: ScenePrint",
+    "shortDescription" : "human_hands_detected: 272枚\nrest: 272枚\n最大反復回数: 11回\n訓練正解率: 100.0%\n検証正解率: 100.0%\n再現率: 100.0%\n適合率: 100.0%\nF1スコア: 1.000\nデータ拡張: なし\n特徴抽出器: ScenePrint",
     "metadataOutputVersion" : "3.0",
     "outputSchema" : [
       {
@@ -19,7 +19,7 @@
         "shortDescription" : ""
       }
     ],
-    "version" : "v28",
+    "version" : "v30",
     "modelParameters" : [
 
     ],
@@ -66,7 +66,7 @@
       "human_hands_detected",
       "rest"
     ],
-    "generatedClassName" : "ScaryCatScreeningML_OvR_human_hands_detected_v28",
+    "generatedClassName" : "ScaryCatScreeningML_OvR_human_hands_detected_v30",
     "userDefinedMetadata" : {
       "com.apple.createml.version" : "15.5.0"
     },
