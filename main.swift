@@ -1,12 +1,12 @@
 import CatAPIClient
 import Foundation
-import OvRClassification
+import SLClassifier
 import SLDuplicateChecker
 import SLFileManager
 import SLImageLoader
 
-private let fetchImagesCount = 300
-private let classificationThreshold: Float = 0.98
+private let fetchImagesCount = 1000
+private let classificationThreshold: Float = 0.95
 private let batchSize = 200
 private let maxRetriesWhenFailedToDownload = 3
 
@@ -16,7 +16,7 @@ Task {
     do {
         let fileManager = SLFileManager()
         let imageLoader = SLImageLoader()
-        let classifier = try await OvRClassifier(
+        let classifier = try await SLClassifier(
             fileManager: fileManager,
             imageLoader: imageLoader
         )
@@ -67,7 +67,7 @@ private actor ImageClassifierTrainer {
         stats = ProcessingStats()
     }
 
-    func run(classifier: OvRClassifier, duplicateChecker: DuplicateCheckerProtocol) async throws {
+    func run(classifier: SLClassifier, duplicateChecker: DuplicateCheckerProtocol) async throws {
         let classifierInstance = classifier
         let duplicateCheckerInstance = duplicateChecker
         guard batchSize >= 10 else {
@@ -155,7 +155,7 @@ private actor ImageClassifierTrainer {
 
     private func processImage(
         url: URL,
-        classifier: OvRClassifier,
+        classifier: SLClassifier,
         duplicateChecker: DuplicateCheckerProtocol
     ) async {
         print("----------------------------------------")

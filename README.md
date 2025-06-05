@@ -10,7 +10,7 @@
 ├── SLDuplicateChecker/
 ├── SLFileManager/
 ├── SLImageLoader/
-├── OvRClassification/
+├── SLClassifier/
 ├── Dataset/
 │   ├── Verified/
 │   └── Unverified/
@@ -69,5 +69,5 @@
   - 同じ画像ハッシュがメモリ上に存在する場合に重複と判定されること
   - 新しい画像のハッシュがメモリ上に正しく保存されること
 
-* 画像の分類処理（OvRClassifierTests）
+* 画像の分類処理（SLClassifierTests）
   - 分類処理がエラーなく完了すること

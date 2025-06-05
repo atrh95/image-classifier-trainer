@@ -1,10 +1,10 @@
-import OvRClassification
+import SLClassifier
 import SLFileManager
 import SLImageLoader
 import XCTest
 
-final class OvRClassifierTests: XCTestCase {
-    private var classifier: OvRClassifier!
+final class SLClassifierTests: XCTestCase {
+    private var classifier: SLClassifier!
     private var fileManagerMock: MockSLFileManager!
     private var imageLoaderMock: MockSLImageLoader!
 
@@ -12,7 +12,7 @@ final class OvRClassifierTests: XCTestCase {
         try await super.setUp()
         fileManagerMock = MockSLFileManager()
         imageLoaderMock = MockSLImageLoader()
-        classifier = try await OvRClassifier(
+        classifier = try await SLClassifier(
             fileManager: fileManagerMock,
             imageLoader: imageLoaderMock
         )

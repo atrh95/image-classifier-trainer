@@ -15,7 +15,7 @@ targets:
     sources:
       - path: main.swift
     dependencies:
-      - target: OvRClassification
+      - target: SLClassifier
       - target: SLImageLoader
       - target: SLFileManager
       - target: CatAPIClient
@@ -33,7 +33,7 @@ targets:
     sources:
       - path: LabeledDatasetCuratorTests
     dependencies:
-      - target: OvRClassification
+      - target: SLClassifier
       - target: CatAPIClient
       - target: SLFileManager
       - target: SLImageLoader
@@ -46,11 +46,11 @@ targets:
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGNING_REQUIRED: NO
 
-  OvRClassification:
+  SLClassifier:
     type: framework
     platform: macOS
     sources:
-      - path: OvRClassification
+      - path: SLClassifier
         excludes:
           - "**/*.md"
     dependencies:
@@ -58,8 +58,8 @@ targets:
       - target: SLImageLoader
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.OvRClassification
-        PRODUCT_NAME: OvRClassification
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.SLClassifier
+        PRODUCT_NAME: SLClassifier
         MACOSX_DEPLOYMENT_TARGET: "15.2"
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGNING_REQUIRED: NO

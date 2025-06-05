@@ -11,16 +11,24 @@ private struct ModelContainer: @unchecked Sendable {
     let request: VNCoreMLRequest
 }
 
-public actor OvRClassifier {
-    private var models: [ModelContainer] = []
+public actor SLClassifier {
+    private var ovrModels: [ModelContainer] = []
+    private var ovoModels: [ModelContainer] = []
     private let fileManager: SLFileManagerProtocol
     private let imageLoader: SLImageLoaderProtocol
 
-    private var modelDirectoryURL: URL {
+    private var ovrModelDirectoryURL: URL {
         let currentFileURL = URL(fileURLWithPath: #filePath)
         return currentFileURL
             .deletingLastPathComponent()
             .appendingPathComponent("OvRModels")
+    }
+
+    private var ovoModelDirectoryURL: URL {
+        let currentFileURL = URL(fileURLWithPath: #filePath)
+        return currentFileURL
+            .deletingLastPathComponent()
+            .appendingPathComponent("OvOModels")
     }
 
     public init(
@@ -30,13 +38,16 @@ public actor OvRClassifier {
         self.fileManager = fileManager
         self.imageLoader = imageLoader
 
-        // モデルのロード
-        let loadedModels = try await loadMLModels()
-        guard !loadedModels.isEmpty else {
+        // OvRモデルのロード
+        let loadedOvRModels = try await loadModels(from: ovrModelDirectoryURL)
+        guard !loadedOvRModels.isEmpty else {
             throw ClassificationError.modelNotFound
         }
+        ovrModels = loadedOvRModels
 
-        models = loadedModels
+        // OvOモデルのロード
+        let loadedOvOModels = try await loadModels(from: ovoModelDirectoryURL)
+        ovoModels = loadedOvOModels
     }
 
     /// 画像データを分類し、閾値を超えた特徴のリストを返す
@@ -73,8 +84,8 @@ public actor OvRClassifier {
             of: (modelId: String, observations: [(featureName: String, confidence: Float)]?)
                 .self
         ) { group in
-            // 全てのモデルを並列に実行
-            for container in models {
+            // 全てのOvRモデルを並列に実行
+            for container in ovrModels {
                 group.addTask {
                     do {
                         let handler = VNImageRequestHandler(data: imageData, options: [:])
@@ -104,15 +115,38 @@ public actor OvRClassifier {
             }
         }
 
+        // mouth_openのみが検出された場合の特別処理
+        if let mouthOpenIndex = thresholdedFeatures.firstIndex(where: { $0.label == "mouth_open" }),
+           thresholdedFeatures.count == 1 {
+            // OvOモデルを探す
+            if let ovoContainer = ovoModels.first(where: { $0.modelFileName.contains("OvO_mouth_open_vs_safe") }) {
+                do {
+                    let handler = VNImageRequestHandler(data: imageData, options: [:])
+                    try handler.perform([ovoContainer.request])
+                    if let observations = ovoContainer.request.results as? [VNClassificationObservation],
+                       let safeObservation = observations.first(where: { $0.identifier.lowercased() == "safe" }),
+                       let mouthOpenObservation = observations.first(where: { $0.identifier.lowercased() == "mouth_open" }) {
+                        // 信頼度の高い方のクラスを採用
+                        if safeObservation.confidence > mouthOpenObservation.confidence {
+                            thresholdedFeatures[mouthOpenIndex].confidence = 0
+                            print("[SLClassifier] [Info] OvOモデルによりsafeと判定され、mouth_openの信頼度を0に設定")
+                        }
+                    }
+                } catch {
+                    print("[SLClassifier] [Warning] OvOモデルの検証に失敗: \(error.localizedDescription)")
+                }
+            }
+        }
+
         return thresholdedFeatures
     }
 
     /// モデルファイルからVisionモデルとリクエストを並列にロード
-    private func loadMLModels() async throws -> [ModelContainer] {
+    private func loadModels(from directoryURL: URL) async throws -> [ModelContainer] {
         var collectedContainers: [ModelContainer] = []
 
         // モデルディレクトリ内の.mlmodelcファイルを取得
-        let modelURLs = try await fileManager.getModelFiles(in: modelDirectoryURL)
+        let modelURLs = try await fileManager.getModelFiles(in: directoryURL)
 
         guard !modelURLs.isEmpty else {
             throw ClassificationError.modelNotFound
