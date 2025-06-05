@@ -16,6 +16,7 @@ public actor SLClassifier {
     private var ovoModels: [ModelContainer] = []
     private let fileManager: SLFileManagerProtocol
     private let imageLoader: SLImageLoaderProtocol
+    private let OvRDefaultThreshold: Float = 0.95
 
     private var ovrModelDirectoryURL: URL {
         let currentFileURL = URL(fileURLWithPath: #filePath)
@@ -53,7 +54,7 @@ public actor SLClassifier {
     /// 画像データを分類し、閾値を超えた特徴のリストを返す
     public func getThresholdedFeatures(
         data imageData: Data,
-        threshold: Float
+        threshold: Float = OvRDefaultThreshold
     ) async throws -> [(label: String, confidence: Float)] {
         // 閾値を0に設定して全ての結果を取得
         let allFeatures = try await classifyImageWithThreshold(

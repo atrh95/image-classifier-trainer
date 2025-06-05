@@ -1,6 +1,8 @@
+# Labeled Dataset Curator
+
 ## 概要
 
-事前にトレーニングされた画像分類モデルを行って、APIから画像を取得し、画像の分類を行い、データセットの構築の一部を自動化します。
+これは画像分類モデルのトレーニングにしようするデータセットを効率的に収集するためのツールです。また、十分にトレーニングされたMLModelに対しては、このツールは、大量のデータセットを相手にした時のMLModelの誤分類を行う確率や写真の傾向を把握するための検証ツールとしても機能します。誤分類や複数の特徴を兼ね備えていてトレーニングに向かない写真が検出される状況において、MLModelが誤分類を行う確率や誤分類を行う写真の傾向を特定することができます。
 
 ## ディレクトリ構成
 
@@ -14,14 +16,14 @@
 ├── Dataset/
 │   ├── Verified/
 │   └── Unverified/
-├── OvRImageClassifierTrainerTests/
+├── LabeledDatasetCuratorTests/
 └── main.swift
 ```
 
 ## 設定オプション
 
 - `fetchImagesCount`: 取得する画像の数（デフォルト: 10）
-- `classificationThreshold`: 分類の信頼度の閾値（デフォルト: 0.85）
+- `classificationThreshold`: 分類の信頼度の閾値（デフォルト: 0.95）
 - `batchSize`: バッチ処理のサイズ（デフォルト: 10、最小値: 10）
 - `maxRetriesWhenFailedToDownload`: ダウンロード失敗時の最大リトライ回数（デフォルト: 3）
 
@@ -56,7 +58,7 @@
 
 ## テスト
 
-`SingleLabeledDatasetBuilderTests` ディレクトリにユニットテストが含まれており、以下の点をテストしています：
+`LabeledDatasetCuratorTests` ディレクトリにユニットテストが含まれており、以下の点をテストしています
 
 * 画像データの保存（SLFileManagerTests）
   - 指定されたラベルのディレクトリに正しく保存できること
