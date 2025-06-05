@@ -5,7 +5,7 @@ import SLDuplicateChecker
 import SLFileManager
 import SLImageLoader
 
-private let fetchImagesCount = 1000
+private let fetchImagesCount = 50000
 private let classificationThreshold: Float = 0.95
 private let batchSize = 200
 private let maxRetriesWhenFailedToDownload = 3
@@ -305,7 +305,7 @@ private func printBatchProgress(
     print("URL取得数: \(stats.totalFetchedURLs)件")
     print("処理した画像数: \(stats.processedAfterValidation)件")
     print("保存した画像数: \(stats.labelCounts.values.reduce(0, +))枚")
-    
+
     // ラベルごとの集計を表示
     if !stats.labelCounts.isEmpty {
         for (label, count) in stats.labelCounts.sorted(by: { $0.key < $1.key }) {

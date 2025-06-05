@@ -12,11 +12,12 @@ private struct ModelContainer: @unchecked Sendable {
 }
 
 public actor SLClassifier {
+public static let ovrDefaultThreshold: Float = 0.95
+    
     private var ovrModels: [ModelContainer] = []
     private var ovoModels: [ModelContainer] = []
     private let fileManager: SLFileManagerProtocol
     private let imageLoader: SLImageLoaderProtocol
-    private let OvRDefaultThreshold: Float = 0.95
 
     private var ovrModelDirectoryURL: URL {
         let currentFileURL = URL(fileURLWithPath: #filePath)
@@ -54,7 +55,7 @@ public actor SLClassifier {
     /// 画像データを分類し、閾値を超えた特徴のリストを返す
     public func getThresholdedFeatures(
         data imageData: Data,
-        threshold: Float = OvRDefaultThreshold
+        threshold: Float = SLClassifier.ovrDefaultThreshold
     ) async throws -> [(label: String, confidence: Float)] {
         // 閾値を0に設定して全ての結果を取得
         let allFeatures = try await classifyImageWithThreshold(
@@ -119,27 +120,40 @@ public actor SLClassifier {
         // mouth_openのみが検出された場合の特別処理
         if let mouthOpenIndex = thresholdedFeatures.firstIndex(where: { $0.label == "mouth_open" }),
            thresholdedFeatures.count == 1 {
-            // OvOモデルを探す
-            if let ovoContainer = ovoModels.first(where: { $0.modelFileName.contains("OvO_mouth_open_vs_safe") }) {
-                do {
-                    let handler = VNImageRequestHandler(data: imageData, options: [:])
-                    try handler.perform([ovoContainer.request])
-                    if let observations = ovoContainer.request.results as? [VNClassificationObservation],
-                       let safeObservation = observations.first(where: { $0.identifier.lowercased() == "safe" }),
-                       let mouthOpenObservation = observations.first(where: { $0.identifier.lowercased() == "mouth_open" }) {
-                        // 信頼度の高い方のクラスを採用
-                        if safeObservation.confidence > mouthOpenObservation.confidence {
-                            thresholdedFeatures[mouthOpenIndex].confidence = 0
-                            print("[SLClassifier] [Info] OvOモデルによりsafeと判定され、mouth_openの信頼度を0に設定")
-                        }
-                    }
-                } catch {
-                    print("[SLClassifier] [Warning] OvOモデルの検証に失敗: \(error.localizedDescription)")
-                }
-            }
+            await checkMouthOpenWithOvO(
+                thresholdedFeatures: &thresholdedFeatures,
+                mouthOpenIndex: mouthOpenIndex,
+                imageData: imageData
+            )
         }
 
         return thresholdedFeatures
+    }
+
+    /// OvOモデルでmouth_openの再判定を行う
+    private func checkMouthOpenWithOvO(
+        thresholdedFeatures: inout [(label: String, confidence: Float)],
+        mouthOpenIndex: Int,
+        imageData: Data
+    ) async {
+        if let ovoContainer = ovoModels.first(where: { $0.modelFileName.contains("OvO_mouth_open_vs_safe") }) {
+            do {
+                let handler = VNImageRequestHandler(data: imageData, options: [:])
+                try handler.perform([ovoContainer.request])
+                if let observations = ovoContainer.request.results as? [VNClassificationObservation],
+                   let safeObservation = observations.first(where: { $0.identifier.lowercased() == "safe" }),
+                   let mouthOpenObservation = observations
+                   .first(where: { $0.identifier.lowercased() == "mouth_open" }) {
+                    // 信頼度の高い方のクラスを採用
+                    if safeObservation.confidence > mouthOpenObservation.confidence {
+                        thresholdedFeatures[mouthOpenIndex].confidence = 0
+                        print("[SLClassifier] [Info] OvOモデルによりsafeと判定され、mouth_openの信頼度を0に設定")
+                    }
+                }
+            } catch {
+                print("[SLClassifier] [Warning] OvOモデルの検証に失敗: \(error.localizedDescription)")
+            }
+        }
     }
 
     /// モデルファイルからVisionモデルとリクエストを並列にロード

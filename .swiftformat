@@ -64,4 +64,7 @@
                                  #        "key2": value2,
                                  #        "key3": value3
                                  #     ]
-                                 # 各要素が同じインデントレベルに並び、視覚的に整理されて読みやすい
+                                 # 各要素が同じインデントレベルに並び、視覚的に整理されて読みやすい# Disable wrapping braces to avoid conflict with SwiftLint
+
+# 複数行のステートメントの折り返しを無効化
+--disable wrapMultilineStatementBraces
