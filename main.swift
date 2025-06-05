@@ -5,7 +5,7 @@ import SLDuplicateChecker
 import SLFileManager
 import SLImageLoader
 
-private let fetchImagesCount = 100000
+private let fetchImagesCount = 50000
 private let classificationThreshold: Float = 0.85
 private let batchSize = 200
 private let maxRetriesWhenFailedToDownload = 3

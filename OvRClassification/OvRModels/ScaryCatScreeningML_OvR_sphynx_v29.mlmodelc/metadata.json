@@ -1,6 +1,6 @@
 [
   {
-    "shortDescription" : "sphynx: 178枚\nrest: 180枚\n最大反復回数: 15回\n訓練正解率: 100.0%\n検証正解率: 94.4%\n再現率: 100.0%\n適合率: 90.0%\nF1スコア: 0.947\nデータ拡張: なし\n特徴抽出器: ScenePrint",
+    "shortDescription" : "sphynx: 170枚\nrest: 172枚\n最大反復回数: 15回\n訓練正解率: 100.0%\n検証正解率: 100.0%\n再現率: 100.0%\n適合率: 100.0%\nF1スコア: 1.000\nデータ拡張: ImageAugmentationOptions(rawValue: 18)\n特徴抽出器: ScenePrint",
     "metadataOutputVersion" : "3.0",
     "outputSchema" : [
       {
@@ -19,7 +19,7 @@
         "shortDescription" : ""
       }
     ],
-    "version" : "v27",
+    "version" : "v29",
     "modelParameters" : [
 
     ],
@@ -66,7 +66,7 @@
       "rest",
       "sphynx"
     ],
-    "generatedClassName" : "ScaryCatScreeningML_OvR_sphynx_v27",
+    "generatedClassName" : "ScaryCatScreeningML_OvR_sphynx_v29",
     "userDefinedMetadata" : {
       "com.apple.createml.version" : "15.5.0"
     },
