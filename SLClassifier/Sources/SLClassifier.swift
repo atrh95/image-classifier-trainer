@@ -12,8 +12,8 @@ private struct ModelContainer: @unchecked Sendable {
 }
 
 public actor SLClassifier {
-public static let ovrDefaultThreshold: Float = 0.95
-    
+    public static let ovrDefaultThreshold: Float = 0.95
+
     private var ovrModels: [ModelContainer] = []
     private var ovoModels: [ModelContainer] = []
     private let fileManager: SLFileManagerProtocol
