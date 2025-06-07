@@ -15,6 +15,21 @@ jobs:
     permissions:
       contents: read
 
+  # ビルド
+  build-package:
+    name: Build Package
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Package
+        run: swift build
+
+  # ユニットテスト
+  run-tests:
+    name: Run Unit Tests
+    needs: setup-mint
+    uses: ./.github/workflows/run-tests.yml
+
   # コード品質チェック
   code-quality:
     name: Code Quality Check

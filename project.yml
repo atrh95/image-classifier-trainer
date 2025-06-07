@@ -41,10 +41,60 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.LabeledDatasetCurator
         MACOSX_DEPLOYMENT_TARGET: "15.2"
 
+  SLFileManagerTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Sources/SLFileManager/Tests
+    dependencies:
+      - package: LabeledDatasetCurator
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.SLFileManagerTests
+        GENERATE_INFOPLIST_FILE: YES
+
+  SLDuplicateCheckerTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Sources/SLDuplicateChecker/Tests
+    dependencies:
+      - package: LabeledDatasetCurator
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.SLDuplicateCheckerTests
+        GENERATE_INFOPLIST_FILE: YES
+
+  SLClassifierTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Sources/SLClassifier/Tests
+    dependencies:
+      - package: LabeledDatasetCurator
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.SLClassifierTests
+        GENERATE_INFOPLIST_FILE: YES
+
 schemes:
   LabeledDatasetCurator:
     build:
       targets:
         LabeledDatasetCurator: all
+        SLFileManagerTests: all
+        SLDuplicateCheckerTests: all
+        SLClassifierTests: all
     run:
       config: Debug
+    test:
+      config: Debug
+      gatherCoverageData: true
+      coverageTargets:
+        - SLFileManagerTests
+        - SLDuplicateCheckerTests
+        - SLClassifierTests
+      targets:
+        - SLFileManagerTests
+        - SLDuplicateCheckerTests
+        - SLClassifierTests
