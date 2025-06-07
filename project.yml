@@ -2,11 +2,31 @@
 
 name: LabeledDatasetCurator
 options:
-  bundleIdPrefix: com.akitora
   deploymentTarget:
     macOS: "15.2"
-  xcodeVersion: "15.0"
-  generateEmptyDirectories: true
+  createIntermediateGroups: true
+
+configs:
+  Debug: debug
+  Release: release
+
+settings:
+  base:
+    SWIFT_VERSION: 5.9
+    MARKETING_VERSION: 1.0
+    CURRENT_PROJECT_VERSION: 1
+    COREML_CODEGEN_LANGUAGE: Swift
+    ENABLE_USER_SCRIPT_SANDBOXING: "NO"
+
+packages:
+  LabeledDatasetCurator:
+    path: .
+    products:
+      - SLFileManager
+      - SLImageLoader
+      - SLDuplicateChecker
+      - SLClassifier
+      - CatAPIClient
 
 targets:
   LabeledDatasetCurator:
@@ -15,116 +35,16 @@ targets:
     sources:
       - path: main.swift
     dependencies:
-      - target: SLClassifier
-      - target: SLImageLoader
-      - target: SLFileManager
-      - target: CatAPIClient
-      - target: SLDuplicateChecker
+      - package: LabeledDatasetCurator
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.LabeledDatasetCurator
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.LabeledDatasetCurator
         MACOSX_DEPLOYMENT_TARGET: "15.2"
-        CODE_SIGNING_ALLOWED: NO
-        CODE_SIGNING_REQUIRED: NO
 
-  LabeledDatasetCuratorTests:
-    type: bundle.unit-test
-    platform: macOS
-    sources:
-      - path: LabeledDatasetCuratorTests
-    dependencies:
-      - target: SLClassifier
-      - target: CatAPIClient
-      - target: SLFileManager
-      - target: SLImageLoader
-      - target: SLDuplicateChecker
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.LabeledDatasetCuratorTests
-        MACOSX_DEPLOYMENT_TARGET: "15.2"
-        GENERATE_INFOPLIST_FILE: true
-        CODE_SIGNING_ALLOWED: NO
-        CODE_SIGNING_REQUIRED: NO
-
-  SLClassifier:
-    type: framework
-    platform: macOS
-    sources:
-      - path: SLClassifier
-        excludes:
-          - "**/*.md"
-    dependencies:
-      - target: SLFileManager
-      - target: SLImageLoader
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.SLClassifier
-        PRODUCT_NAME: SLClassifier
-        MACOSX_DEPLOYMENT_TARGET: "15.2"
-        CODE_SIGNING_ALLOWED: NO
-        CODE_SIGNING_REQUIRED: NO
-
-  CatAPIClient:
-    type: framework
-    platform: macOS
-    sources:
-      - path: CatAPIClient
-        excludes:
-          - "**/*.md"
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.CatAPIClient
-        PRODUCT_NAME: CatAPIClient
-        MACOSX_DEPLOYMENT_TARGET: "15.2"
-        CODE_SIGNING_ALLOWED: NO
-        CODE_SIGNING_REQUIRED: NO
-    dependencies: []
-
-  SLFileManager:
-    type: framework
-    platform: macOS
-    sources:
-      - path: SLFileManager
-        excludes:
-          - "**/*.md"
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.SLFileManager
-        PRODUCT_NAME: SLFileManager
-        MACOSX_DEPLOYMENT_TARGET: "15.2"
-        CODE_SIGNING_ALLOWED: NO
-        CODE_SIGNING_REQUIRED: NO
-    dependencies: []
-
-  SLImageLoader:
-    type: framework
-    platform: macOS
-    sources:
-      - path: SLImageLoader
-        excludes:
-          - "**/*.md"
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.SLImageLoader
-        PRODUCT_NAME: SLImageLoader
-        MACOSX_DEPLOYMENT_TARGET: "15.2"
-        CODE_SIGNING_ALLOWED: NO
-        CODE_SIGNING_REQUIRED: NO
-    dependencies: []
-
-  SLDuplicateChecker:
-    type: framework
-    platform: macOS
-    sources:
-      - path: SLDuplicateChecker
-        excludes:
-          - "**/*.md"
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitora.SLDuplicateChecker
-        PRODUCT_NAME: SLDuplicateChecker
-        MACOSX_DEPLOYMENT_TARGET: "15.2"
-        CODE_SIGNING_ALLOWED: NO
-        CODE_SIGNING_REQUIRED: NO
-    dependencies:
-      - target: SLFileManager
+schemes:
+  LabeledDatasetCurator:
+    build:
+      targets:
+        LabeledDatasetCurator: all
+    run:
+      config: Debug
