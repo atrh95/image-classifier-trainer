@@ -45,7 +45,7 @@ targets:
     type: bundle.unit-test
     platform: macOS
     sources:
-      - path: Sources/SLFileManager/Tests
+      - path: SLFileManager
     dependencies:
       - package: LabeledDatasetCurator
     settings:
@@ -57,7 +57,7 @@ targets:
     type: bundle.unit-test
     platform: macOS
     sources:
-      - path: Sources/SLDuplicateChecker/Tests
+      - path: SLDuplicateChecker
     dependencies:
       - package: LabeledDatasetCurator
     settings:
@@ -69,7 +69,7 @@ targets:
     type: bundle.unit-test
     platform: macOS
     sources:
-      - path: Sources/SLClassifier/Tests
+      - path: SLClassifier
     dependencies:
       - package: LabeledDatasetCurator
     settings:
