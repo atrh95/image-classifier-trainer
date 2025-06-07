@@ -65,18 +65,6 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.SLDuplicateCheckerTests
         GENERATE_INFOPLIST_FILE: YES
 
-  SLClassifierTests:
-    type: bundle.unit-test
-    platform: macOS
-    sources:
-      - path: SLClassifier
-    dependencies:
-      - package: LabeledDatasetCurator
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.SLClassifierTests
-        GENERATE_INFOPLIST_FILE: YES
-
 schemes:
   LabeledDatasetCurator:
     build:
@@ -84,7 +72,6 @@ schemes:
         LabeledDatasetCurator: all
         SLFileManagerTests: all
         SLDuplicateCheckerTests: all
-        SLClassifierTests: all
     run:
       config: Debug
     test:
@@ -93,8 +80,6 @@ schemes:
       coverageTargets:
         - SLFileManagerTests
         - SLDuplicateCheckerTests
-        - SLClassifierTests
       targets:
         - SLFileManagerTests
         - SLDuplicateCheckerTests
-        - SLClassifierTests
