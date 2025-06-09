@@ -7,10 +7,22 @@ public final class MockSLFileManager: SLFileManagerProtocol {
     /// 指定されたディレクトリ内の画像ファイルパスのリストを設定するためのプロパティ
     public var mockImageFiles: [String: [String]] = [:]
     private var mockSavedImages: [String: Data] = [:]
-    private let datasetDirectory: URL?
+    private nonisolated let overrideDatasetDirectory: URL?
 
-    public init(datasetDirectory: URL? = nil) {
-        self.datasetDirectory = datasetDirectory
+    public nonisolated var datasetDirectory: URL {
+        if let overrideDatasetDirectory {
+            return overrideDatasetDirectory
+        }
+        let currentFileURL = URL(fileURLWithPath: #file)
+        return currentFileURL
+            .deletingLastPathComponent() // Sources
+            .deletingLastPathComponent() // SLFileManager
+            .deletingLastPathComponent() // Project root
+            .appendingPathComponent("Dataset")
+    }
+
+    public init(overrideDatasetDirectory: URL? = nil) {
+        self.overrideDatasetDirectory = overrideDatasetDirectory
     }
 
     public func saveImage(_: Data, fileName _: String, label _: String) async throws {

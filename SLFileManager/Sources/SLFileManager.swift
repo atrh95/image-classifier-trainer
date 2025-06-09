@@ -2,18 +2,22 @@ import Foundation
 
 public actor SLFileManager: SLFileManagerProtocol {
     private let fileManager = FileManager.default
-    private let datasetDirectory: URL
+    private nonisolated let overrideDatasetDirectory: URL?
 
-    public init(datasetDirectory: URL? = nil) {
-        if let datasetDirectory {
-            self.datasetDirectory = datasetDirectory
-        } else {
-            let currentFileURL = URL(fileURLWithPath: #file)
-            self.datasetDirectory = currentFileURL
-                .deletingLastPathComponent() // SLFileManager
-                .deletingLastPathComponent() // Project root
-                .appendingPathComponent("Dataset")
+    public init(overrideDatasetDirectory: URL? = nil) {
+        self.overrideDatasetDirectory = overrideDatasetDirectory
+    }
+
+    public nonisolated var datasetDirectory: URL {
+        if let overrideDatasetDirectory {
+            return overrideDatasetDirectory
         }
+        let currentFileURL = URL(fileURLWithPath: #file)
+        return currentFileURL
+            .deletingLastPathComponent() // Sources
+            .deletingLastPathComponent() // SLFileManager
+            .deletingLastPathComponent() // Project root
+            .appendingPathComponent("Dataset")
     }
 
     private var unverifiedDirectory: URL {

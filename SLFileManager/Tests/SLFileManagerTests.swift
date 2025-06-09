@@ -13,13 +13,24 @@ final class SLFileManagerTests: XCTestCase {
     override func setUp() async throws {
         try await super.setUp()
         try FileManager.default.createDirectory(at: tempDirectory, withIntermediateDirectories: true)
-        fileManager = SLFileManager(datasetDirectory: tempDirectory)
+        fileManager = SLFileManager(overrideDatasetDirectory: tempDirectory)
     }
 
     override func tearDown() async throws {
         try? FileManager.default.removeItem(at: tempDirectory)
         fileManager = nil
         try await super.tearDown()
+    }
+
+    /// プロジェクトの想定されたDatasetディレクトリが正しく設定されているかを確認
+    func testInitializationWithProjectDatasetDirectory() async throws {
+        // SLFileManagerのデフォルトのdatasetDirectoryを直接取得
+        let expectedDatasetDirectory = SLFileManager().datasetDirectory
+
+        let fileManager = SLFileManager(overrideDatasetDirectory: nil)
+        let actualDirectory = fileManager.datasetDirectory
+
+        XCTAssertEqual(actualDirectory, expectedDatasetDirectory, "想定されたDatasetディレクトリが正しく設定されていません")
     }
 
     /// 画像データを指定されたラベルのディレクトリに正しく保存できることを確認
