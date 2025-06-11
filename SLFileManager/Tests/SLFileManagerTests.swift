@@ -10,16 +10,16 @@ final class SLFileManagerTests: XCTestCase {
         return testDirectory
     }
 
-    override func setUp() async throws {
-        try await super.setUp()
+    override func setUpWithError() throws {
+        try super.setUpWithError()
         try FileManager.default.createDirectory(at: tempDirectory, withIntermediateDirectories: true)
         fileManager = SLFileManager(overrideDatasetDirectory: tempDirectory)
     }
 
-    override func tearDown() async throws {
+    override func tearDownWithError() throws {
         try? FileManager.default.removeItem(at: tempDirectory)
         fileManager = nil
-        try await super.tearDown()
+        try super.tearDownWithError()
     }
 
     /// プロジェクトの想定されたDatasetディレクトリが正しく設定されているかを確認
